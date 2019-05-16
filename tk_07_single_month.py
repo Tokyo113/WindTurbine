@@ -11,3 +11,9 @@ print(data.describe())
 # 切片:每隔5min取样
 data1 = data.iloc[0:35592:5]
 print(data1.head())
+
+
+# sns.pointplot(x="wind_speed", y="active_power", data=data1.head(100), scale=0.25, join=False, ax=ax)
+# 绘制散点图
+plt.scatter(data1["wind_speed"], data1["active_power"], s=3, alpha=.5)
+plt.show()
