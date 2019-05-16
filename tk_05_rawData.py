@@ -12,5 +12,6 @@ data1.columns = ["date", "Generator_speed", "Rotor_speed", "Gearbox_oil_temperat
                  "Generator_bearing_temperature_drive", "Generator_bearing_temperature_nondrive",
                  "wind_speed", "active_power"]
 print(data1.describe())
-data1.to_csv("./data/raw_data/raw_data.csv")
+# data1.to_csv("./data/raw_data/raw_data.csv")
+
 
