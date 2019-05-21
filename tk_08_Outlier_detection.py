@@ -18,9 +18,9 @@ data1 = data1.drop("date", axis=1)
 
 # 参数初始化
 # 聚类个数
-k = 10
-# 离散点阈值   (3, 1.97)
-threshold = 2
+k = 15
+# 离散点阈值   (3, 1.97)  (15, 1.95)
+threshold = 1.95
 # 聚类最大循环次数
 iteration = 500
 # 数据标准化
@@ -38,6 +38,7 @@ model.fit(data_tk)
 cluster_data = pd.concat([data1, pd.Series(model.labels_, index=data1.index)], axis=1)
 cluster_data.columns = list(data1.columns) + ["category"]
 print(cluster_data.groupby("category").count())
+# cluster_data.to_csv("./data/k_Means_15.csv")
 
 
 norm = []
@@ -70,6 +71,13 @@ cluster1 = cluster_data[cluster_data["category"] == 0]
 cluster2 = cluster_data[cluster_data["category"] == 1]
 cluster3 = cluster_data[cluster_data["category"] == 2]
 
+# K_Means K=10聚类查看
+# data_10 = pd.read_csv("./data/k_Means_10.csv")
+# cluster10_2 = data_10[data_10["category"] == 6]
+# cluster10_6 = data_10[data_10["category"] == 2]
+# cluster_data10 = data_10[ (data_10["category"] != 6)]
+# print(cluster_data10.groupby("category").count())
+
 # 绘图
 plt.rcParams['font.sans-serif'] = ['SimHei']  # 用来正常显示中文标签
 plt.rcParams['axes.unicode_minus'] = False  # 用来正常显示负号
@@ -91,10 +99,16 @@ plt.scatter(normal["wind_speed"], normal["active_power"], c='g', s=3, alpha=.5)
 plt.scatter(outier["wind_speed"], outier["active_power"], c='r', s=3, alpha=.5)
 
 
+
+# plt.scatter(cluster_data10["wind_speed"], cluster_data10["active_power"], c='g', s=3, alpha=.5)
 # 三个类别示意图
 # plt.scatter(cluster1["wind_speed"], cluster1["active_power"], c='r', s=3, alpha=.5)
 # plt.scatter(cluster2["wind_speed"], cluster2["active_power"], c='b', s=3, alpha=.5)
 # plt.scatter(cluster3["wind_speed"], cluster3["active_power"], c='g', s=3, alpha=.5)
+
+# plt.scatter(cluster10_2["wind_speed"], cluster10_2["active_power"], c='b', s=3, alpha=.5)
+# plt.scatter(cluster10_6["wind_speed"], cluster10_6["active_power"], c='g', s=3, alpha=.5)
+
 plt.show()
 
 
@@ -109,6 +123,14 @@ plt.show()
 
 思考:
 问题在于绘制风速-功率曲线用到的两个量风速和功率数量级相差太大,离群点受风速特征的影响体现不出来
+
+
+5.20进展:   基本可以识别离群点
+1.只使用风速和功率,标准化以后进行K_Means聚类
+2.k=10,15 等均可以基本实现离群点的识别,还需要删去一些离群的簇(表现为各类中点的个数较少的簇)
+3.思考: 两个方向
+a.k可以取的比较大,然后删去离群点以及离群的簇
+b.二次聚类,删去离群点后再聚类一次(因为离群点会对聚类中心有影响)
 '''
 
 
