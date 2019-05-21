@@ -38,7 +38,7 @@ model.fit(data_tk)
 cluster_data = pd.concat([data1, pd.Series(model.labels_, index=data1.index)], axis=1)
 cluster_data.columns = list(data1.columns) + ["category"]
 print(cluster_data.groupby("category").count())
-# cluster_data.to_csv("./data/k_Means_15.csv")
+
 
 
 norm = []
@@ -62,6 +62,7 @@ norm = pd.concat(norm)
 cluster_data = pd.concat([cluster_data, norm], axis=1)
 cluster_data.columns = list(data1.columns) + ["category"] + ["distance"]
 # print(cluster_data.head(100))
+# cluster_data.to_csv("./data/k_Means_15.csv")
 
 
 
