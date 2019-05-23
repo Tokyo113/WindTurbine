@@ -11,7 +11,7 @@ author: Tokyo
 
 
 data = pd.read_csv("./data/data_after_KMeans.csv")
-data = data.drop("Unnamed: 0", axis=1)
+data1 = data.drop("Unnamed: 0", axis=1)
 print(len(data))
 
 
@@ -54,8 +54,8 @@ for a, b in data["active_power"].groupby(quartiles):
 s = pd.concat(s)
 s = s.drop("active_power", axis=1)
 
-data = pd.concat([data, s], axis=1)
-# data.columns = list(data.columns) + ["outier"]
+data = pd.concat([data1, s], axis=1)
+data.columns = list(data1.columns) + ["outier"]
 print(data.head())
 
 
