@@ -55,10 +55,20 @@ s = pd.concat(s)
 s = s.drop("active_power", axis=1)
 
 data = pd.concat([data1, s], axis=1)
-data.columns = list(data1.columns) + ["outier"]
-print(data.head())
+data.columns = list(data1.columns) + ["outlier"]
+print(data.groupby("outlier").count())
 
+# 绘制图像
+plt.rcParams['font.sans-serif'] = ['SimHei']  # 用来正常显示中文标签
+plt.rcParams['axes.unicode_minus'] = False  # 用来正常显示负号
 
+# 三个类
+normal = data[data["outlier"] == 0]
+outlier = data[data["outlier"] == 1]
 
+# 正常点与离群点
+plt.scatter(normal["wind_speed"], normal["active_power"], c='g', s=3, alpha=.5)
+plt.scatter(outlier["wind_speed"], outlier["active_power"], c='r', s=3, alpha=.5)
+plt.show()
 
 
