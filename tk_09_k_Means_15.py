@@ -22,7 +22,8 @@ normal = data[data["distance"] < threshold]
 cluster_15 = normal[(normal["category"] != 14) & (normal["category"] != 10)]
 cluster_15 = cluster_15[(cluster_15["category"] != 6) | (cluster_15["active_power"] >2000)]
 
-cluster_15_outier = cluster_15[cluster_15["category"] == 14]
+# 生成去掉离群点后的数据
+cluster_15.to_csv("./data/data_after_KMeans.csv", index=None)
 
 # 绘图
 plt.rcParams['font.sans-serif'] = ['SimHei']  # 用来正常显示中文标签
@@ -32,7 +33,7 @@ plt.rcParams['axes.unicode_minus'] = False  # 用来正常显示负号
 # 原始数据: 正常点与离群点
 # plt.scatter(normal["wind_speed"], normal["active_power"], c='g', s=3, alpha=.5)
 # plt.scatter(outier["wind_speed"], outier["active_power"], c='r', s=3, alpha=.5)
-# plt.scatter(cluster_15_outier["wind_speed"], cluster_15_outier["active_power"], c='b', s=3, alpha=.5)
+
 
 # f.add_subplot(1, 2, 2)
 # 去掉离群点后的图像

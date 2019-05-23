@@ -25,7 +25,7 @@ threshold = 1.95
 iteration = 500
 # 数据标准化
 data_zs = 1.0*(data1 - data1.mean())/data1.std()
-print(data_zs.head(20))
+# print(data_zs.head(20))
 
 data_tk = data_zs[["wind_speed", "active_power"]]
 print(data_tk)
@@ -33,11 +33,11 @@ print(data_tk)
 from sklearn.cluster import KMeans
 model = KMeans(n_clusters=k, max_iter=iteration)
 model.fit(data_tk)
-# print(pd.Series(model.labels_, index=data1.index))
+print(type(model.labels_))
 # 添加类别属性列
 cluster_data = pd.concat([data1, pd.Series(model.labels_, index=data1.index)], axis=1)
 cluster_data.columns = list(data1.columns) + ["category"]
-print(cluster_data.groupby("category").count())
+# print(cluster_data.groupby("category").count())
 
 
 
@@ -110,7 +110,7 @@ plt.scatter(outier["wind_speed"], outier["active_power"], c='r', s=3, alpha=.5)
 # plt.scatter(cluster10_2["wind_speed"], cluster10_2["active_power"], c='b', s=3, alpha=.5)
 # plt.scatter(cluster10_6["wind_speed"], cluster10_6["active_power"], c='g', s=3, alpha=.5)
 
-plt.show()
+# plt.show()
 
 
 '''
