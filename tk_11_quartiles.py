@@ -1,4 +1,4 @@
-#coding:utf-8
+
 import pandas as pd
 import numpy as np
 import seaborn as sns
@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 '''
 data: 5.23
 author: Tokyo
+desc:使用四分位法识别离群点,然后绘图显示
 '''
 
 
@@ -35,6 +36,10 @@ grouped = data["active_power"].groupby(quartiles).apply(get_status)
 
 # print(grouped.apply(get_status))
 print(type(grouped))
+
+
+
+# 四分位法处理数据
 s = []
 for a, b in data["active_power"].groupby(quartiles):
     label = []
@@ -54,6 +59,9 @@ for a, b in data["active_power"].groupby(quartiles):
 s = pd.concat(s)
 s = s.drop("active_power", axis=1)
 
+
+
+
 data = pd.concat([data1, s], axis=1)
 data.columns = list(data1.columns) + ["outlier"]
 print(data.groupby("outlier").count())
@@ -66,9 +74,16 @@ plt.rcParams['axes.unicode_minus'] = False  # 用来正常显示负号
 normal = data[data["outlier"] == 0]
 outlier = data[data["outlier"] == 1]
 
+normal = normal.drop(["distance", "outlier", "category"], axis=1)
+
+# 生成csv文件
+# normal.to_csv('./data/data_preprocessing.csv', index=None)
+
+
+
 # 正常点与离群点
 plt.scatter(normal["wind_speed"], normal["active_power"], c='g', s=3, alpha=.5)
-plt.scatter(outlier["wind_speed"], outlier["active_power"], c='r', s=3, alpha=.5)
+# plt.scatter(outlier["wind_speed"], outlier["active_power"], c='r', s=3, alpha=.5)
 plt.show()
 
 
