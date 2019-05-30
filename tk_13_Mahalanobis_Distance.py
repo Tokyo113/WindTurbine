@@ -1,10 +1,11 @@
 #coding:utf-8
 '''
-@Time: 2019/5/24 上午11:49
+@Time: 2019/5/30 上午10:30
 @author: Tokyo
-@file: tk_12_regression_analysis.py
-@desc: 建立回归模型:线性回归,决策树,SVM,随机森林,AdaBoost,GBDT,XgBoost
-        而且做出图像对比预测值和实际值
+@file: tk_13_Mahalanobis_Distance.py
+@desc:使用马氏距离来进行异常检测
+
+思考:用马氏距离来进行数据预处理,目前聚类还是用的欧氏距离,前提是z-score标准化
 '''
 
 import pandas as pd
@@ -46,9 +47,10 @@ def WT_modeling(features, label):
     f_names = pd.DataFrame(features).columns.values
     l_v = pd.DataFrame(label).values
 
-    # 切分训练集,测试集,验证集
-    X_tt, X_validation, Y_tt, Y_validation = train_test_split(f_v, l_v, test_size=0.2)
-    X_train, X_test, Y_train, Y_test = train_test_split(X_tt, Y_tt, test_size=0.25)
+
+    # 切分训练集,测试集
+    X_train, X_test, Y_train, Y_test = train_test_split(f_v, l_v, test_size=0.2, shuffle=False )
+
 
     from sklearn.linear_model import LinearRegression, Ridge, Lasso
     from sklearn.metrics import mean_squared_error, mean_absolute_error, median_absolute_error
@@ -77,14 +79,14 @@ def WT_modeling(features, label):
 
     for regr_name, regr in models:
         regr.fit(X_train, Y_train)
-        xy_lst = [(X_train, Y_train), (X_validation, Y_validation), (X_test, Y_test)]
+        xy_lst = [(X_train, Y_train), (X_test, Y_test)]
         for i in range(len(xy_lst)):
             X_part = xy_lst[i][0]
             Y_part = xy_lst[i][1]
             Y_pred = regr.predict(X_part)
 
             print(i)
-            # 0--训练集, 1--验证集, 2--测试集
+            # 0--训练集, 1--测试集
             print(regr_name, "mean_squared_error", mean_squared_error(Y_part, Y_pred))
             print(regr_name, "mean_absolute_error", mean_absolute_error(Y_part, Y_pred))
             print(regr_name, "median_absolute_error", median_absolute_error(Y_part, Y_pred))
@@ -100,29 +102,112 @@ def WT_figure(features, label):
     f_names = pd.DataFrame(features).columns.values
     l_v = pd.DataFrame(label).values
 
-    # 切分训练集,测试集,验证集
-    X_tt, X_validation, Y_tt, Y_validation = train_test_split(f_v, l_v, test_size=0.2)
-    X_train, X_test, Y_train, Y_test = train_test_split(X_tt, Y_tt, test_size=0.25)
+    # 切分训练集,测试集
+    X_train, X_test, Y_train, Y_test = train_test_split(f_v, l_v, test_size=0.2, shuffle=False)
+
 
     xgb = XGBRegressor().fit(X_train, Y_train)
     Y_pred = xgb.predict(X_test)
     print(Y_pred)
     y_pre = pd.Series(Y_pred)
-    y_pre[150:250].plot(c='g')
+    y_pre.plot(c='g')
     # flatten 降维
     y_test = Y_test.flatten()
     y_test = pd.Series(y_test)
-    y_test[150:250].plot(c='y')
+    y_test.plot(c='y')
+    plt.ylim((50, 71))
+    plt.xlim((0, 1000))
     plt.show()
+
+
+def WT_MD(features, label):
+    """
+    基于马氏距离的异常检测
+    :param features: 特征向量
+    :param label: 待预测值
+    """
+    from sklearn.model_selection import train_test_split
+    from xgboost import XGBRegressor
+    from scipy.spatial.distance import pdist, mahalanobis
+    import seaborn as sns
+    import matplotlib.pyplot as plt
+    f_v = pd.DataFrame(features).values
+    f_names = pd.DataFrame(features).columns.values
+    l_v = pd.DataFrame(label).values
+
+    # 切分训练集,测试集
+    X_train, X_test, Y_train, Y_test = train_test_split(f_v, l_v, test_size=0.2, shuffle=False)
+
+
+    xgb = XGBRegressor().fit(X_train, Y_train)
+
+    # 1.训练集,求得马氏距离检测异常的阈值
+    Y_pred = xgb.predict(X_train)
+    Y_train = Y_train.flatten()
+    # 计算马氏距离
+    err = Y_train - Y_pred
+
+    X_ref = np.array([err, Y_train])
+    X_ref = X_ref.T
+    # 均值
+    u = X_ref.mean(axis=0)
+    delta = X_ref - u
+    print(delta)
+    print('******')
+
+    cov = np.cov(X_ref.T)
+    inv = np.linalg.inv(cov)
+    print(cov)
+    print(len(X_train))
+    MD = []
+    # MD_a = []
+    for i in range(len(X_train)):
+        md = np.dot(np.dot(delta[i], inv), delta[i].T)
+        MD.append(np.sqrt(md))
+        # 直接使用函数来计算
+        # MD_a.append(mahalanobis(X_ref[i], u, inv))
+
+
+    # 绘制概率密度直方图
+    # sns.distplot(MD, bins=65)
+    # plt.show()
+
+
+    # 2.验证集(用于异常检测)
+    Y_pred2 = xgb.predict(X_test)
+    Y_test = Y_test.flatten()
+
+    # 计算马氏距离
+    err_test = Y_test - Y_pred2
+
+    X_app = np.array([err_test, Y_test])
+    X_app = X_app.T
+    # 均值u和协方差矩阵inv均使用训练集得出的值
+    MD_app = []
+    for i in range(len(X_test)):
+        MD_app.append(mahalanobis(X_app[i], u, inv))
+    pd.Series(MD_app).plot()
+    plt.show()
+
+
+
+
+
+
+
+
+
 
 
 
 
 def main():
     features, label = WT_preprocessing()
-    WT_modeling(features, label)
+    # WT_modeling(features, label)
     # WT_figure(features, label)
+    WT_MD(features, label)
 
 
 if __name__ == '__main__':
     main()
+
