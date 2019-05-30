@@ -11,8 +11,8 @@ data = data[data["active_power"] > 0][data["state"] == 6]
 # data =data[data["active_power"] > 1]
 # print(data.groupby("state").count())
 # 切片:每隔5min取样
-data1 = data.iloc[0:35592:5].drop("state", axis=1)
-data1 = data1.drop("date", axis=1)
+data = data.iloc[0:35592:5].drop("state", axis=1)
+data1 = data.drop("date", axis=1)
 # 一共6919条数据
 # print(data1.head())
 
@@ -35,8 +35,8 @@ model = KMeans(n_clusters=k, max_iter=iteration)
 model.fit(data_tk)
 print(type(model.labels_))
 # 添加类别属性列
-cluster_data = pd.concat([data1, pd.Series(model.labels_, index=data1.index)], axis=1)
-cluster_data.columns = list(data1.columns) + ["category"]
+cluster_data = pd.concat([data, pd.Series(model.labels_, index=data1.index)], axis=1)
+cluster_data.columns = list(data.columns) + ["category"]
 # print(cluster_data.groupby("category").count())
 
 
@@ -60,9 +60,11 @@ for i in range(k):
 norm = pd.concat(norm)
 
 cluster_data = pd.concat([cluster_data, norm], axis=1)
-cluster_data.columns = list(data1.columns) + ["category"] + ["distance"]
-# print(cluster_data.head(100))
-# cluster_data.to_csv("./data/k_Means_15.csv")
+cluster_data.columns = list(data.columns) + ["category"] + ["distance"]
+print("*****")
+print(cluster_data.head())
+# 带时间戳
+# cluster_data.to_csv("./data/k_Means_15_time.csv")
 
 
 

@@ -4,6 +4,7 @@
 @author: Tokyo
 @file: tk_13_Mahalanobis_Distance.py
 @desc:使用马氏距离来进行异常检测
+效果还不错,可以基本复现论文
 
 思考:用马氏距离来进行数据预处理,目前聚类还是用的欧氏距离,前提是z-score标准化
 '''
@@ -186,6 +187,7 @@ def WT_MD(features, label):
     MD_app = []
     for i in range(len(X_test)):
         MD_app.append(mahalanobis(X_app[i], u, inv))
+    print(X_test[445])
     pd.Series(MD_app).plot()
     plt.show()
 
@@ -211,3 +213,9 @@ def main():
 if __name__ == '__main__':
     main()
 
+'''
+接下来的任务:
+1.xgboost调参
+2.增加数据,半年或一年
+
+'''
