@@ -2,7 +2,7 @@
 import pandas as pd
 import numpy as np
 
-
+# 107ºÅ·ç»ú 2018.07.01~2019.01.01
 data1 = pd.read_csv('./data/raw_data/3.csv', header=None)
 data2 = pd.read_csv('./data/raw_data/5.csv', header=None)
 data3 = pd.read_csv('./data/raw_data/6.csv', header=None)
