@@ -198,15 +198,16 @@ def wt_preprocessing(filename, gs=False, rs=False, dt=False, ndt=False, ws=False
     from sklearn.preprocessing import StandardScaler, MinMaxScaler
     # 1.读入数据
     df = pd.read_csv(filename)
+    df = df.drop("date", axis=1)
     # 得到标签(待预测值)
-    label = df["Gearbox_oil_temperature"]
+    label = df["Gearbox_oil_tem"]
 
-    df = df.drop("Gearbox_oil_temperature", axis=1)
+    df = df.drop("Gearbox_oil_tem", axis=1)
 
     # 特征处理
     scaler_lst = [gs, rs, dt, ndt, ws, ap]
     column_lst = ["Generator_speed", "Rotor_speed",
-                  "Generator_bearing_temperature_drive", "Generator_bearing_temperature_nondrive",
+                  "Generator_bearing_tem_drive", "Generator_bearing_tem_nondrive",
                   "wind_speed", "wind_speed"]
 
     for i in range(len(scaler_lst)):
@@ -221,16 +222,63 @@ def wt_preprocessing(filename, gs=False, rs=False, dt=False, ndt=False, ws=False
     return df, label
 
 
-def WT_modeling():
-    pass
+def WT_modeling(X_tt, Y_tt, X_test, Y_test):
+    from sklearn.model_selection import train_test_split
+
+    X_tt = pd.DataFrame(X_tt).values
+    Y_tt = pd.DataFrame(Y_tt).values
+    # 2017年数据分出一部分作为验证集
+    X_train, X_validation, Y_train, Y_validation = train_test_split(X_tt, Y_tt, test_size=0.2)
+
+    X_test = pd.DataFrame(X_test).values
+    Y_test = pd.DataFrame(Y_test).values
+
+
+
+    from sklearn.linear_model import LinearRegression, Ridge, Lasso
+    from sklearn.metrics import mean_squared_error, mean_absolute_error, median_absolute_error
+    from sklearn.tree import DecisionTreeRegressor
+    from sklearn.svm import SVR
+    from sklearn.ensemble import RandomForestRegressor, AdaBoostRegressor, GradientBoostingRegressor
+    from xgboost import XGBRegressor
+    models = []
+    # 线性回归
+    # models.append(("LinearRegression", LinearRegression()))
+    # models.append(("Ridge", Ridge(alpha=0.6)))
+    # models.append(("Lasso", Lasso(alpha=0.002)))
+    # 决策树回归
+    # models.append(("DecisionTreeRegressor", DecisionTreeRegressor()))
+    # 支持向量回归(误差很大)
+    # models.append(("SVR", SVR(C=100000)))
+    # models.append(("RandomForestRegressor", RandomForestRegressor(n_estimators=5000)))
+    # AdaBoostRegressor  base_estimator=DecisionTreeRegressor默认
+    # models.append(("AdaBoostRegressor", AdaBoostRegressor()))
+    # GBDT 回归
+    # models.append(("GradientBoostingRegressor", GradientBoostingRegressor()))
+    # XGBoost
+    models.append(("XGBoost", XGBRegressor(max_depth=7, n_estimators=5000, learning_rate=0.05)))
+
+    for regr_name, regr in models:
+        regr.fit(X_train, Y_train)
+        xy_lst = [(X_train, Y_train), (X_validation, Y_validation)]
+        for i in range(len(xy_lst)):
+            X_part = xy_lst[i][0]
+            Y_part = xy_lst[i][1]
+            Y_pred = regr.predict(X_part)
+
+            print(i)
+            # 0--训练集, 1--验证集
+            print(regr_name, "mean_squared_error", mean_squared_error(Y_part, Y_pred))
+            print(regr_name, "mean_absolute_error", mean_absolute_error(Y_part, Y_pred))
+            print(regr_name, "median_absolute_error", median_absolute_error(Y_part, Y_pred))
 
 
 def main():
     # 数据预处理
-    filename = './data/year/raw_data2018.csv'
-    raw_data = data_preprocessing(filename)
-    normal_data = DBSCAN_cluster(raw_data)
-    data_pre = Quartiles(normal_data)
+    # filename = './data/year/raw_data2018.csv'
+    # raw_data = data_preprocessing(filename)
+    # normal_data = DBSCAN_cluster(raw_data)
+    # data_pre = Quartiles(normal_data)
     # cluster_data = K_Means(raw_data)
     # draw_clusters(cluster_data)
     # data_pre.to_csv('./data/year/data_pre2018.csv', index=None)
@@ -239,6 +287,9 @@ def main():
     # 标准化
     data_2017 = './data/year/data_pre2017.csv'
     data_2018 = './data/year/data_pre2018.csv'
+    X_tt, Y_tt = wt_preprocessing(data_2017)
+    X_test, Y_test = wt_preprocessing(data_2018)
+    WT_modeling(X_tt, Y_tt, X_test, Y_test)
 
 
 if __name__ == '__main__':
@@ -247,10 +298,30 @@ if __name__ == '__main__':
 
 
 '''
+6.02
 思考:
 1.DBSCAN的参数如何选择?尝试k-dist方法,选择的依据
 2.目前采用的是基于欧氏距离,效果还可以,尝试马氏距离
 
+6.03
+1.特征选择问题,见博客
+2.调参:测试集误差较大
+xgboost: max_depth=5, n_estimators=5000, learning_rate=0.2
+0
+XGBoost mean_squared_error 0.726443665234
+XGBoost mean_absolute_error 0.627086875969
+XGBoost median_absolute_error 0.456092597412
+
+max_depth=7, n_estimators=5000, learning_rate=0.2
+过拟合?
+0
+XGBoost mean_squared_error 0.0050620309286
+XGBoost mean_absolute_error 0.0462466675304
+XGBoost median_absolute_error 0.026651763916
+1
+XGBoost mean_squared_error 37.9944184355
+XGBoost mean_absolute_error 4.89490600804
+XGBoost median_absolute_error 4.0803150177
 
 
 
