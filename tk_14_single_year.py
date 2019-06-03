@@ -26,7 +26,7 @@ def data_preprocessing(filename):
     print(data.describe())
 
     # 处理前的散点图
-    plt.scatter(data["wind_speed"], data["active_power"], s=3, alpha=.5)
+    # plt.scatter(data["wind_speed"], data["active_power"], s=3, alpha=.5)
     # plt.show()
     print(data.mean())
     return data
@@ -107,7 +107,7 @@ def DBSCAN_cluster(data):
     cluster_data = pd.concat([data, pd.Series(model.labels_, index=data.index)], axis=1)
     cluster_data.columns = list(data.columns) + ["category"]
     print(cluster_data.groupby("category").count())
-    #TODO:为啥去不掉离群点
+
     cluster_data["category"][(cluster_data["category"] == -1) & (cluster_data["active_power"] > 2000)] = 0
     outier = cluster_data[(cluster_data["category"] == -1)]
     normal = cluster_data[cluster_data["category"] != -1]
@@ -116,10 +116,10 @@ def DBSCAN_cluster(data):
     plt.rcParams['axes.unicode_minus'] = False  # 用来正常显示负号
 
     # 正常点与离群点
-    plt.scatter(normal["wind_speed"], normal["active_power"], c='g', s=3, alpha=.5)
+    # plt.scatter(normal["wind_speed"], normal["active_power"], c='g', s=3, alpha=.5)
     # plt.scatter(outier["wind_speed"], outier["active_power"], c='r', s=3, alpha=.5)
-
-    plt.show()
+    #
+    # plt.show()
 
     normal = normal.drop("category", axis=1)
     print(normal.describe())
@@ -144,7 +144,6 @@ def draw_clusters(cluster_data):
     plt.show()
 
 
-
 def Quartiles(data):
     data1 = data.drop("date", axis=1)
     column_name = list(data.columns)
@@ -153,11 +152,12 @@ def Quartiles(data):
 
     # 四分位法处理数据
     s = []
+    k = 3
     for a, b in data["active_power"].groupby(quartiles):
         label = []
         q_interval = b.quantile(q=0.75) - b.quantile(q=0.25)
-        high = b.quantile(q=0.75) + 1.5 * q_interval
-        low = b.quantile(q=0.25) - 1.5 * q_interval
+        high = b.quantile(q=0.75) + k * q_interval
+        low = b.quantile(q=0.25) - k * q_interval
         for i in b:
             if (i < low) | (i > high):
                 label.append(1)
@@ -187,14 +187,59 @@ def Quartiles(data):
     plt.scatter(outlier["wind_speed"], outlier["active_power"], c='r', s=3, alpha=.5)
     plt.show()
 
+    normal = normal.drop("outlier", axis=1)
+    print(normal.describe())
+    return normal
+
+def wt_preprocessing(filename, gs=False, rs=False, dt=False, ndt=False, ws=False, ap=False):
+    """
+    对各列特征进行标准化或者归一化处理
+    """
+    from sklearn.preprocessing import StandardScaler, MinMaxScaler
+    # 1.读入数据
+    df = pd.read_csv(filename)
+    # 得到标签(待预测值)
+    label = df["Gearbox_oil_temperature"]
+
+    df = df.drop("Gearbox_oil_temperature", axis=1)
+
+    # 特征处理
+    scaler_lst = [gs, rs, dt, ndt, ws, ap]
+    column_lst = ["Generator_speed", "Rotor_speed",
+                  "Generator_bearing_temperature_drive", "Generator_bearing_temperature_nondrive",
+                  "wind_speed", "wind_speed"]
+
+    for i in range(len(scaler_lst)):
+        if scaler_lst[i]:
+            df[column_lst[i]] = \
+                MinMaxScaler().fit_transform(df[column_lst[i]].values.reshape(-1, 1)).reshape(1, -1)[0]
+
+        else:
+            df[column_lst[i]] = \
+                StandardScaler().fit_transform(df[column_lst[i]].values.reshape(-1, 1)).reshape(1, -1)[0]
+
+    return df, label
+
+
+def WT_modeling():
+    pass
+
+
 def main():
-    filename = './data/year/raw_data2017.csv'
+    # 数据预处理
+    filename = './data/year/raw_data2018.csv'
     raw_data = data_preprocessing(filename)
     normal_data = DBSCAN_cluster(raw_data)
-    # print(normal_data.head())
-    # Quartiles(normal_data)
+    data_pre = Quartiles(normal_data)
     # cluster_data = K_Means(raw_data)
     # draw_clusters(cluster_data)
+    # data_pre.to_csv('./data/year/data_pre2018.csv', index=None)
+
+    # 建模
+    # 标准化
+    data_2017 = './data/year/data_pre2017.csv'
+    data_2018 = './data/year/data_pre2018.csv'
+
 
 if __name__ == '__main__':
     main()
