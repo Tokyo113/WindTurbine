@@ -54,7 +54,7 @@ def WT_modeling(features, label):
 
 
     from sklearn.linear_model import LinearRegression, Ridge, Lasso
-    from sklearn.metrics import mean_squared_error, mean_absolute_error, median_absolute_error
+    from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
     from sklearn.tree import DecisionTreeRegressor
     from sklearn.svm import SVR
     from sklearn.ensemble import RandomForestRegressor,AdaBoostRegressor, GradientBoostingRegressor
@@ -90,7 +90,7 @@ def WT_modeling(features, label):
             # 0--训练集, 1--测试集
             print(regr_name, "mean_squared_error", mean_squared_error(Y_part, Y_pred))
             print(regr_name, "mean_absolute_error", mean_absolute_error(Y_part, Y_pred))
-            print(regr_name, "median_absolute_error", median_absolute_error(Y_part, Y_pred))
+            print(regr_name, "r2_score", r2_score(Y_part, Y_pred))
 
 
 
@@ -205,7 +205,7 @@ def WT_MD(features, label):
 
 def main():
     features, label = WT_preprocessing()
-    # WT_modeling(features, label)
+    WT_modeling(features, label)
     # WT_figure(features, label)
     WT_MD(features, label)
 

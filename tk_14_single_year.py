@@ -228,7 +228,7 @@ def WT_modeling(X_tt, Y_tt, X_test, Y_test):
     X_tt = pd.DataFrame(X_tt).values
     Y_tt = pd.DataFrame(Y_tt).values
     # 2017年数据分出一部分作为验证集
-    X_train, X_validation, Y_train, Y_validation = train_test_split(X_tt, Y_tt, test_size=0.2)
+    X_train, X_validation, Y_train, Y_validation = train_test_split(X_tt, Y_tt, test_size=0.2, shuffle=None)
 
     X_test = pd.DataFrame(X_test).values
     Y_test = pd.DataFrame(Y_test).values
@@ -236,7 +236,7 @@ def WT_modeling(X_tt, Y_tt, X_test, Y_test):
 
 
     from sklearn.linear_model import LinearRegression, Ridge, Lasso
-    from sklearn.metrics import mean_squared_error, mean_absolute_error, median_absolute_error
+    from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
     from sklearn.tree import DecisionTreeRegressor
     from sklearn.svm import SVR
     from sklearn.ensemble import RandomForestRegressor, AdaBoostRegressor, GradientBoostingRegressor
@@ -250,28 +250,97 @@ def WT_modeling(X_tt, Y_tt, X_test, Y_test):
     # models.append(("DecisionTreeRegressor", DecisionTreeRegressor()))
     # 支持向量回归(误差很大)
     # models.append(("SVR", SVR(C=100000)))
-    # models.append(("RandomForestRegressor", RandomForestRegressor(n_estimators=5000)))
+    models.append(("RandomForestRegressor", RandomForestRegressor()))
     # AdaBoostRegressor  base_estimator=DecisionTreeRegressor默认
-    # models.append(("AdaBoostRegressor", AdaBoostRegressor()))
+    models.append(("AdaBoostRegressor", AdaBoostRegressor()))
     # GBDT 回归
-    # models.append(("GradientBoostingRegressor", GradientBoostingRegressor()))
+    models.append(("GradientBoostingRegressor", GradientBoostingRegressor()))
     # XGBoost
-    models.append(("XGBoost", XGBRegressor(max_depth=7, n_estimators=5000, learning_rate=0.05)))
+    models.append(("XGBoost", XGBRegressor(max_depth=5, n_estimators=5000)))
 
     for regr_name, regr in models:
         regr.fit(X_train, Y_train)
-        xy_lst = [(X_train, Y_train), (X_validation, Y_validation)]
+        xy_lst = [(X_train, Y_train), (X_validation, Y_validation), (X_test, Y_test)]
         for i in range(len(xy_lst)):
             X_part = xy_lst[i][0]
             Y_part = xy_lst[i][1]
             Y_pred = regr.predict(X_part)
 
             print(i)
-            # 0--训练集, 1--验证集
+            # 0--训练集, 1--验证集, 2--测试集
             print(regr_name, "mean_squared_error", mean_squared_error(Y_part, Y_pred))
             print(regr_name, "mean_absolute_error", mean_absolute_error(Y_part, Y_pred))
-            print(regr_name, "median_absolute_error", median_absolute_error(Y_part, Y_pred))
+            print(regr_name, "r2_score", r2_score(Y_part, Y_pred))
 
+
+
+def WT_MD(features, label):
+    """
+    基于马氏距离的异常检测
+    :param features: 特征向量
+    :param label: 待预测值
+    """
+    from sklearn.model_selection import train_test_split
+    from xgboost import XGBRegressor
+    from scipy.spatial.distance import pdist, mahalanobis
+    import seaborn as sns
+    import matplotlib.pyplot as plt
+    f_v = pd.DataFrame(features).values
+    f_names = pd.DataFrame(features).columns.values
+    l_v = pd.DataFrame(label).values
+
+    # 切分训练集,测试集
+    X_train, X_test, Y_train, Y_test = train_test_split(f_v, l_v, test_size=0.2, shuffle=False)
+
+
+    xgb = XGBRegressor().fit(X_train, Y_train)
+
+    # 1.训练集,求得马氏距离检测异常的阈值
+    Y_pred = xgb.predict(X_train)
+    Y_train = Y_train.flatten()
+    # 计算马氏距离
+    err = Y_train - Y_pred
+
+    X_ref = np.array([err, Y_train])
+    X_ref = X_ref.T
+    # 均值
+    u = X_ref.mean(axis=0)
+    delta = X_ref - u
+
+
+    cov = np.cov(X_ref.T)
+    inv = np.linalg.inv(cov)
+
+    MD = []
+    # MD_a = []
+    for i in range(len(X_train)):
+        md = np.dot(np.dot(delta[i], inv), delta[i].T)
+        MD.append(np.sqrt(md))
+        # 直接使用函数来计算
+        # MD_a.append(mahalanobis(X_ref[i], u, inv))
+
+
+    # 绘制概率密度直方图
+    # sns.distplot(MD, bins=65)
+    # plt.show()
+
+
+    # 2.验证集(用于异常检测)
+    Y_pred2 = xgb.predict(X_test)
+    Y_test = Y_test.flatten()
+
+    # 计算马氏距离
+    err_test = Y_test - Y_pred2
+
+    X_app = np.array([err_test, Y_test])
+    X_app = X_app.T
+    # 均值u和协方差矩阵inv均使用训练集得出的值
+    MD_app = []
+    for i in range(len(X_test)):
+        MD_app.append(mahalanobis(X_app[i], u, inv))
+
+    pd.Series(MD_app[0:2000]).plot()
+    plt.show()
 
 def main():
     # 数据预处理
@@ -289,7 +358,10 @@ def main():
     data_2018 = './data/year/data_pre2018.csv'
     X_tt, Y_tt = wt_preprocessing(data_2017)
     X_test, Y_test = wt_preprocessing(data_2018)
+
     WT_modeling(X_tt, Y_tt, X_test, Y_test)
+    WT_MD(X_tt, Y_tt)
+
 
 
 if __name__ == '__main__':
@@ -323,6 +395,11 @@ XGBoost mean_squared_error 37.9944184355
 XGBoost mean_absolute_error 4.89490600804
 XGBoost median_absolute_error 4.0803150177
 
-
+6.10
+测试集误差较大(18年数据)
+1.调参
+2.增加输入参数维度:其他参数或者前两个时刻的数值
+3.限定范围,数据量小一点,几个月的数据
+使用18年前三个月数据建立正常模型,预测一个月
 
 '''
