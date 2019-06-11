@@ -112,7 +112,8 @@ plt.scatter(outier["wind_speed"], outier["active_power"], c='r', s=3, alpha=.5)
 # plt.scatter(cluster10_2["wind_speed"], cluster10_2["active_power"], c='b', s=3, alpha=.5)
 # plt.scatter(cluster10_6["wind_speed"], cluster10_6["active_power"], c='g', s=3, alpha=.5)
 
-# plt.show()
+plt.show()
+# plt.savefig('./data/figure/three_K_Means.png')
 
 
 '''

@@ -195,7 +195,21 @@ def WT_MD(features, label):
 
 
 
-
+def wt_params(X_train, Y_train):
+    from xgboost import XGBRegressor
+    from sklearn.model_selection import GridSearchCV
+    cv_params = {'n_estimators': [1000, 2000, 3000, 4000]}
+    other_params = {'learning_rate': 0.1, 'n_estimators': 1000, 'max_depth': 5,
+                    'min_child_weight': 1, 'subsample': 1, 'colsample_bytree': 1,
+                    'gamma': 0, 'reg_alpha': 0, 'reg_lambda': 1}
+    model = XGBRegressor(**other_params)
+    optimized_GBM = GridSearchCV(estimator=model, param_grid=cv_params, scoring='r2',
+                                 cv=5, verbose=1, n_jobs=4)
+    optimized_GBM.fit(X_train, Y_train)
+    evaluate_result = optimized_GBM.grid_scores_
+    print('每轮迭代运行结果:{0}'.format(evaluate_result))
+    print('参数的最佳取值: {0}'.format(optimized_GBM.best_params_))
+    print('最佳模型得分: {0}'.format(optimized_GBM.best_score_))
 
 
 
@@ -205,9 +219,10 @@ def WT_MD(features, label):
 
 def main():
     features, label = WT_preprocessing()
-    WT_modeling(features, label)
+    # WT_modeling(features, label)
     # WT_figure(features, label)
-    WT_MD(features, label)
+    # WT_MD(features, label)
+    wt_params(features, label)
 
 
 if __name__ == '__main__':

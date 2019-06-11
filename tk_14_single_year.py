@@ -116,10 +116,11 @@ def DBSCAN_cluster(data):
     plt.rcParams['axes.unicode_minus'] = False  # 用来正常显示负号
 
     # 正常点与离群点
-    # plt.scatter(normal["wind_speed"], normal["active_power"], c='g', s=3, alpha=.5)
-    # plt.scatter(outier["wind_speed"], outier["active_power"], c='r', s=3, alpha=.5)
-    #
-    # plt.show()
+    plt.scatter(normal["wind_speed"], normal["active_power"], c='g', s=3, alpha=.5)
+    plt.scatter(outier["wind_speed"], outier["active_power"], c='r', s=3, alpha=.5)
+
+    plt.show()
+    # plt.savefig('./data/figure/outlier.png')
 
     normal = normal.drop("category", axis=1)
     print(normal.describe())
@@ -208,7 +209,7 @@ def wt_preprocessing(filename, gs=False, rs=False, dt=False, ndt=False, ws=False
     scaler_lst = [gs, rs, dt, ndt, ws, ap]
     column_lst = ["Generator_speed", "Rotor_speed",
                   "Generator_bearing_tem_drive", "Generator_bearing_tem_nondrive",
-                  "wind_speed", "wind_speed"]
+                  "wind_speed", "active_power"]
 
     for i in range(len(scaler_lst)):
         if scaler_lst[i]:
@@ -342,9 +343,28 @@ def WT_MD(features, label):
     pd.Series(MD_app[0:2000]).plot()
     plt.show()
 
+
+def wt_params(X_train, Y_train):
+    from xgboost import XGBRegressor
+    from sklearn.model_selection import GridSearchCV
+    cv_params = {'n_estimators': [500, 550, 450, 480]}
+    # cv_params = {'max_depth': [3, 4, 5, 6, 7, 8, 9, 10], 'min_child_weight':[1, 2, 3, 4, 5, 6]}
+    other_params = {'learning_rate': 0.1, 'n_estimators': 500, 'max_depth': 4,
+                    'min_child_weight': 5, 'subsample': 1, 'colsample_bytree': 1,
+                    'gamma': 0, 'reg_alpha': 0, 'reg_lambda': 1}
+    model = XGBRegressor(**other_params)
+    optimized_GBM = GridSearchCV(estimator=model, param_grid=cv_params, scoring='explained_variance',
+                                 cv=5, verbose=1, n_jobs=4)
+    optimized_GBM.fit(X_train, Y_train)
+    evaluate_result = optimized_GBM.grid_scores_
+    print('每轮迭代运行结果:{0}'.format(evaluate_result))
+    print('参数的最佳取值: {0}'.format(optimized_GBM.best_params_))
+    print('最佳模型得分: {0}'.format(optimized_GBM.best_score_))
+
+
 def main():
     # 数据预处理
-    # filename = './data/year/raw_data2018.csv'
+    # filename = './data/year/raw_data2017.csv'
     # raw_data = data_preprocessing(filename)
     # normal_data = DBSCAN_cluster(raw_data)
     # data_pre = Quartiles(normal_data)
@@ -358,9 +378,9 @@ def main():
     data_2018 = './data/year/data_pre2018.csv'
     X_tt, Y_tt = wt_preprocessing(data_2017)
     X_test, Y_test = wt_preprocessing(data_2018)
-
-    WT_modeling(X_tt, Y_tt, X_test, Y_test)
-    WT_MD(X_tt, Y_tt)
+    wt_params(X_tt, Y_tt)
+    # WT_modeling(X_tt, Y_tt, X_test, Y_test)
+    # WT_MD(X_tt, Y_tt)
 
 
 
