@@ -2,7 +2,7 @@
 
 '''
 @author: Tokyo
-@desc:
+@desc:取所有特征,合并为一个DataFrame
 '''
 import pandas as pd
 import numpy as np
@@ -28,4 +28,4 @@ for i in range(len(df_lst)):
     df = pd.merge(df, df_lst[i], on='date')
 
 print(df.head())
-df.to_csv('./data/year/feature2018_31.csv', index=None)
+# df.to_csv('./data/year/feature2018_31.csv', index=None)
