@@ -83,7 +83,7 @@ def K_Means(data):
     return cluster_data
 
 
-def DBSCAN_cluster(data):
+def DBSCAN_cluster(data, eps, minPts):
     """
     效果还行,收敛时间较长
     基本可以识别离群点
@@ -91,8 +91,8 @@ def DBSCAN_cluster(data):
     """
     from sklearn.cluster import DBSCAN
     # (0.2, 250)
-    eps = 0.2
-    minPts = 250
+    eps = eps  # 0.2
+    minPts = minPts  # 250
     # 数据标准化  z-score
     # 马氏距离? 博客标准化的缺陷
     data1 = data.drop("date", axis=1)
@@ -145,15 +145,22 @@ def draw_clusters(cluster_data):
     plt.show()
 
 
-def Quartiles(data):
+def Quartiles(data, k, cut_num):
+    """
+    四分位法处理数据
+    :param data:
+    :param k: k=1.5~3
+    :param cut_num: 分桶数
+    :return: 去掉离群数据后的数据集
+    """
     data1 = data.drop("date", axis=1)
     column_name = list(data.columns)
     # 分桶
-    quartiles = pd.cut(data["wind_speed"], 20)
+    quartiles = pd.cut(data["wind_speed"], cut_num)
 
     # 四分位法处理数据
     s = []
-    k = 3
+
     for a, b in data["active_power"].groupby(quartiles):
         label = []
         q_interval = b.quantile(q=0.75) - b.quantile(q=0.25)
@@ -191,6 +198,7 @@ def Quartiles(data):
     normal = normal.drop("outlier", axis=1)
     print(normal.describe())
     return normal
+
 
 def wt_preprocessing(filename, gs=False, rs=False, dt=False, ndt=False, ws=False, ap=False):
     """
@@ -345,6 +353,13 @@ def WT_MD(features, label):
 
 
 def wt_params(X_train, Y_train):
+    """
+    xgboost调参函数
+    :param X_train:
+    :param Y_train:
+    scoring评分指标: 'r2', 'explained_variance', 'neg_mean_absolute_error', 'neg_mean_squared_error'
+                    'neg_mean_squared_log_error'
+    """
     from xgboost import XGBRegressor
     from sklearn.model_selection import GridSearchCV
     cv_params = {'n_estimators': [500, 550, 450, 480]}
@@ -353,7 +368,7 @@ def wt_params(X_train, Y_train):
                     'min_child_weight': 5, 'subsample': 1, 'colsample_bytree': 1,
                     'gamma': 0, 'reg_alpha': 0, 'reg_lambda': 1}
     model = XGBRegressor(**other_params)
-    optimized_GBM = GridSearchCV(estimator=model, param_grid=cv_params, scoring='explained_variance',
+    optimized_GBM = GridSearchCV(estimator=model, param_grid=cv_params, scoring='neg_mean_absolute_error',
                                  cv=5, verbose=1, n_jobs=4)
     optimized_GBM.fit(X_train, Y_train)
     evaluate_result = optimized_GBM.grid_scores_
@@ -366,8 +381,8 @@ def main():
     # 数据预处理
     # filename = './data/year/raw_data2017.csv'
     # raw_data = data_preprocessing(filename)
-    # normal_data = DBSCAN_cluster(raw_data)
-    # data_pre = Quartiles(normal_data)
+    # normal_data = DBSCAN_cluster(raw_data, 0.2, 250)
+    # data_pre = Quartiles(normal_data, 3, 20)
     # cluster_data = K_Means(raw_data)
     # draw_clusters(cluster_data)
     # data_pre.to_csv('./data/year/data_pre2018.csv', index=None)

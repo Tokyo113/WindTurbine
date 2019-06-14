@@ -198,13 +198,17 @@ def WT_MD(features, label):
 def wt_params(X_train, Y_train):
     from xgboost import XGBRegressor
     from sklearn.model_selection import GridSearchCV
-    cv_params = {'n_estimators': [1000, 2000, 3000, 4000]}
-    other_params = {'learning_rate': 0.1, 'n_estimators': 1000, 'max_depth': 5,
-                    'min_child_weight': 1, 'subsample': 1, 'colsample_bytree': 1,
-                    'gamma': 0, 'reg_alpha': 0, 'reg_lambda': 1}
+    # cv_params = {'gamma': [0.1, 0.2, 0.3, 0.4, 0.5, 0.6]}
+    # cv_params = {'n_estimators': [75, 78, 70, 80]}
+    # cv_params = {'max_depth': [3, 4, 5, 6, 7, 8, 9, 10], 'min_child_weight':[1, 2, 3, 4, 5, 6]}
+    # cv_params = {'reg_alpha': [0.05, 0.1, 1, 2, 3], 'reg_lambda': [0.05, 0.1, 1, 2, 3]}
+    cv_params = {'learning_rate': [0.01, 0.05, 0.07, 0.1, 0.2]}
+    other_params = {'learning_rate': 0.1, 'n_estimators': 70, 'max_depth': 4,
+                    'min_child_weight': 6, 'subsample': 1, 'colsample_bytree': 1,
+                    'gamma': 0.2, 'reg_alpha': 0.1, 'reg_lambda': 1}
     model = XGBRegressor(**other_params)
     optimized_GBM = GridSearchCV(estimator=model, param_grid=cv_params, scoring='r2',
-                                 cv=5, verbose=1, n_jobs=4)
+                                 cv=10, verbose=1, n_jobs=4)
     optimized_GBM.fit(X_train, Y_train)
     evaluate_result = optimized_GBM.grid_scores_
     print('每轮迭代运行结果:{0}'.format(evaluate_result))

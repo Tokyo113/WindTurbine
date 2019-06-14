@@ -18,24 +18,24 @@ print(len(data))
 
 # 分桶
 quartiles = pd.cut(data["wind_speed"], 20)
-print(quartiles.head())
 
 
-def get_status(group):
-    q_interval = group.quantile(q=0.75) - group.quantile(q=0.25)
-    high = group.quantile(q=0.75) + 1.5*q_interval
-    low = group.quantile(q=0.25) - 1.5*q_interval
-
-    return {'q_high': high, 'q_low': low,
-            'count': group.count(), 'mean': group.mean()}
-
-
-
-
-grouped = data["active_power"].groupby(quartiles).apply(get_status)
+#
+# def get_status(group):
+#     q_interval = group.quantile(q=0.75) - group.quantile(q=0.25)
+#     high = group.quantile(q=0.75) + 1.5*q_interval
+#     low = group.quantile(q=0.25) - 1.5*q_interval
+#
+#     return {'q_high': high, 'q_low': low,
+#             'count': group.count(), 'mean': group.mean()}
+#
+#
+#
+#
+# grouped = data["active_power"].groupby(quartiles).apply(get_status)
 
 # print(grouped.apply(get_status))
-print(type(grouped))
+# print(type(grouped))
 
 
 
@@ -83,7 +83,7 @@ normal = normal.drop(["distance", "outlier", "category"], axis=1)
 
 # 正常点与离群点
 plt.scatter(normal["wind_speed"], normal["active_power"], c='g', s=3, alpha=.5)
-# plt.scatter(outlier["wind_speed"], outlier["active_power"], c='r', s=3, alpha=.5)
+plt.scatter(outlier["wind_speed"], outlier["active_power"], c='r', s=3, alpha=.5)
 plt.show()
 
 

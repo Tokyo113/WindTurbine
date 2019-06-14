@@ -4,6 +4,8 @@
 @author: Tokyo
 @file: tk_15_three_months.py
 @desc: 18年前三个月建立正常模型,第四个月测试
+效果很不好,之前一个月的数据能达到80%+,现在只有40%+
+特征工程!!!数据预处理以及增加特征
 '''
 
 import pandas as pd
