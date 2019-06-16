@@ -14,6 +14,13 @@ import matplotlib.pyplot as plt
 def data_preprocessing(filename):
     data = pd.read_csv(filename)
 
+    # 添加前两时刻温度特征
+    data['date'] = pd.to_datetime(data['date'])
+    data['temp_1'] = data['Gearbox_oil_tem'].shift(10)
+    data['temp_2'] = data['Gearbox_oil_tem'].shift(20)
+
+
+
     # 选择状态为6的数据并去掉state列
     data = data[data["state"] == 6].drop("state", axis=1)
 
@@ -21,7 +28,7 @@ def data_preprocessing(filename):
     data = data[data["active_power"] > 1]
 
     # 取每10min数据
-    data = data[::10]
+    data = data[21::10]
 
     print(data.describe())
 
@@ -384,12 +391,15 @@ def main():
     # normal_data = DBSCAN_cluster(raw_data, 0.2, 250)
     # data_pre = Quartiles(normal_data, 3, 20)
     # cluster_data = K_Means(raw_data)
-    # draw_clusters(cluster_data)
-    # data_pre.to_csv('./data/year/data_pre2018.csv', index=None)
+    # # draw_clusters(cluster_data)
+    # # data_pre.to_csv('./data/year/data_pre2018.csv', index=None)
+    # # 增加两个特征
+    # data_pre.to_csv('./data/year/data_pre2017_2.csv', index=None)
 
     # 建模
     # 标准化
-    data_2017 = './data/year/data_pre2017.csv'
+    # 使用带前两个时刻温度值的数据集
+    data_2017 = './data/year/data_pre2017_2.csv'
     data_2018 = './data/year/data_pre2018.csv'
     X_tt, Y_tt = wt_preprocessing(data_2017)
     X_test, Y_test = wt_preprocessing(data_2018)
