@@ -26,6 +26,13 @@ df_lst = [df2, df3, df4, df5, df6]
 df = df1
 for i in range(len(df_lst)):
     df = pd.merge(df, df_lst[i], on='date')
-
-print(df.head())
-df.to_csv('./data/year/feature2018_31.csv', index=None)
+df['date'] = pd.to_datetime(df['date'])
+print(df['date'].dtype)
+df['temp_1'] = df['Gearbox_oil_temp'].shift(5)
+df['temp_2'] = df['Gearbox_oil_temp'].shift(10)
+print(df.head(20))
+print(df['Gearbox_oil_temp'])
+# 引入了前两个时刻的油温值，增加了两个变量，一共33个
+df.to_csv('./data/year/feature2018_33.csv', index=None)
+# 原来的31个变量
+df.to_csv('./data/year/feature2018_33.csv', index=None)
