@@ -95,6 +95,20 @@ def feature_tree(features, label, names):
 
 def main():
 
+    df = pd.read_csv('./data/feature2018_33_2.csv')
+    print(df.count())
+    # print(df.groupby("state").count())
+    # 切片:每隔5min取样
+    df = df.iloc[129550:435304:5]
+    df = df[df["Active_power"] > 1][df["state"] == 6]
+    df = df[df["Wind_speed"] <= 18]
+    df.rename(columns={'Active_power': 'active_power', 'Wind_speed': 'wind_speed'}, inplace=True)
+    df = df.drop_duplicates(subset=['date'])
+    df_1 = DBSCAN_cluster(df, 0.1, 25)
+    df_2 = Quartiles(df_1, 1.5, 50)
+
+    # 2018年4月测试集
+    df_2.to_csv('./data/data2018_single_month_test.csv', index=None)
     # 数据预处理
     # df = pd.read_csv('./data/year/feature2018_33.csv').head(45000)
     # # 去掉功率为0的点
@@ -114,14 +128,14 @@ def main():
 
 
     # 特征选择
-    data2018 = './data/data2018_single_month_33.csv'
-    data = pd.read_csv(data2018)
-    # wt_draw_scatter(data, 'Gearbox_oil_temp', 'active_power')
-    features, label, names = wt_preprocessing(data, False)
-    feature_RFE(features, label, names)
-    feature_filter(features, label, names)
-    feature_tree(features, label, names)
-    wt_params(features, label)
+    # data2018 = './data/data2018_single_month_33.csv'
+    # data = pd.read_csv(data2018)
+    # # wt_draw_scatter(data, 'Gearbox_oil_temp', 'active_power')
+    # features, label, names = wt_preprocessing(data, False)
+    # feature_RFE(features, label, names)
+    # feature_filter(features, label, names)
+    # feature_tree(features, label, names)
+    # wt_params(features, label)
 
 
 
