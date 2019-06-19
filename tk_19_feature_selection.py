@@ -28,7 +28,11 @@ def main():
     features, label, names = wt_preprocessing(df1, False)
     wt_params(features, label)
 
-
+    # 测试集
+    df_test = pd.read_csv('./data/data2018_single_month_test.csv')
+    df2 = feature_selection(df_test)
+    X_test, Y_test, name_test = wt_preprocessing(df2, False)
+    
 
 
 if __name__ == '__main__':
