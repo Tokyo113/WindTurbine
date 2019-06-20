@@ -251,7 +251,7 @@ def WT_modeling(X_tt, Y_tt, X_test, Y_test):
 
 
 
-    from sklearn.linear_model import LinearRegression, Ridge, Lasso
+    from sklearn.linear_model import LinearRegression, Ridge, Lasso, LogisticRegression
     from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
     from sklearn.tree import DecisionTreeRegressor
     from sklearn.svm import SVR
@@ -260,15 +260,16 @@ def WT_modeling(X_tt, Y_tt, X_test, Y_test):
     models = []
     # 线性回归
     # models.append(("LinearRegression", LinearRegression()))
-    # models.append(("Ridge", Ridge(alpha=0.6)))
-    # models.append(("Lasso", Lasso(alpha=0.002)))
+    models.append(("Ridge", Ridge(alpha=0.6)))
+    # models.append(("LogisticRegression", LogisticRegression()))
+    models.append(("Lasso", Lasso(alpha=0.002)))
     # 决策树回归
     # models.append(("DecisionTreeRegressor", DecisionTreeRegressor()))
     # 支持向量回归(误差很大)
     # models.append(("SVR", SVR(C=100000)))
     models.append(("RandomForestRegressor", RandomForestRegressor()))
     # AdaBoostRegressor  base_estimator=DecisionTreeRegressor默认
-    models.append(("AdaBoostRegressor", AdaBoostRegressor()))
+    # models.append(("AdaBoostRegressor", AdaBoostRegressor()))
     # GBDT 回归
     models.append(("GradientBoostingRegressor", GradientBoostingRegressor()))
     # XGBoost

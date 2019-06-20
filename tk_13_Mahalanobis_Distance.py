@@ -57,7 +57,7 @@ def WT_modeling(features, label):
     from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
     from sklearn.tree import DecisionTreeRegressor
     from sklearn.svm import SVR
-    from sklearn.ensemble import RandomForestRegressor,AdaBoostRegressor, GradientBoostingRegressor
+    from sklearn.ensemble import RandomForestRegressor, AdaBoostRegressor, GradientBoostingRegressor
     from xgboost import XGBRegressor
     models = []
     # 线性回归
@@ -170,8 +170,8 @@ def WT_MD(features, label):
 
 
     # 绘制概率密度直方图
-    # sns.distplot(MD, bins=65)
-    # plt.show()
+    sns.distplot(MD, bins=65)
+    plt.show()
 
 
     # 2.验证集(用于异常检测)
@@ -225,8 +225,8 @@ def main():
     features, label = WT_preprocessing()
     # WT_modeling(features, label)
     # WT_figure(features, label)
-    # WT_MD(features, label)
-    wt_params(features, label)
+    WT_MD(features, label)
+    # wt_params(features, label)
 
 
 if __name__ == '__main__':

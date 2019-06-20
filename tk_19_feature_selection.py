@@ -10,7 +10,8 @@ import pandas as pd
 import numpy as np
 import seaborn as sns
 from tk_18_data_preprocessing import wt_preprocessing
-from tk_14_single_year import wt_params
+from tk_14_single_year import wt_params, WT_modeling
+from tk_tools import wt_MD
 
 def feature_selection(df):
 
@@ -23,16 +24,19 @@ def feature_selection(df):
 
 
 def main():
-    df = pd.read_csv('./data/data2018_single_month_33.csv')
+    # 18年下半年
+    df = pd.read_csv('./data/data2018_half_year33.csv')
     df1 = feature_selection(df)
     features, label, names = wt_preprocessing(df1, False)
-    wt_params(features, label)
+    # wt_params(features, label)
 
     # 测试集
     df_test = pd.read_csv('./data/data2018_single_month_test.csv')
     df2 = feature_selection(df_test)
     X_test, Y_test, name_test = wt_preprocessing(df2, False)
-    
+    # WT_modeling(features, label, X_test, Y_test)
+    wt_MD(features, label)
+
 
 
 if __name__ == '__main__':
