@@ -11,8 +11,8 @@ import numpy as np
 import seaborn as sns
 from tk_18_data_preprocessing import wt_preprocessing
 from tk_14_single_year import wt_params, WT_modeling
-from tk_tools import wt_MD
-
+from tk_tools import wt_MD, wt_Cusum_change_point_detection, Pettitt_change_point_detection, Kendall_change_point_detection
+from tk_13_Mahalanobis_Distance import WT_figure
 def feature_selection(df):
 
     df = df.drop(['Avg_pitch_angle', 'Grid_frequency', 'Power_factor', 'Grid_ap',
@@ -24,18 +24,40 @@ def feature_selection(df):
 
 
 def main():
-    # 18年下半年
+
+    # 18年下半年 32715
     df = pd.read_csv('./data/data2018_half_year33.csv')
     df1 = feature_selection(df)
-    features, label, names = wt_preprocessing(df1, False)
+    # features, label, names = wt_preprocessing(df1, False)
     # wt_params(features, label)
 
-    # 测试集
+    # 测试集  5745
     df_test = pd.read_csv('./data/data2018_single_month_test.csv')
     df2 = feature_selection(df_test)
-    X_test, Y_test, name_test = wt_preprocessing(df2, False)
+    # X_test, Y_test, name_test = wt_preprocessing(df2, False)
     # WT_modeling(features, label, X_test, Y_test)
-    wt_MD(features, label)
+    # md = wt_MD(features, label)
+    # wt_Cusum_change_point_detection(md, 1000, 0.95)
+    # print(Pettitt_change_point_detection(md))
+    # print(Kendall_change_point_detection(md))
+    # 一共38460条数据
+    df3 = pd.concat([df1, df2])
+    features, label, names = wt_preprocessing(df3, False)
+    # wt_params(features, label)
+    md = wt_MD(features, label)
+    # WT_figure(features, label)
+
+
+    # 变点检测
+    # Cusum算法:变点[1198, 1923, 3713]
+    # wt_Cusum_change_point_detection(md, 5000, 0.95)
+    # Pettitt算法: 3772
+    print(Pettitt_change_point_detection(md))
+    # K算法:4266
+    print(Kendall_change_point_detection(md))
+
+
+
 
 
 

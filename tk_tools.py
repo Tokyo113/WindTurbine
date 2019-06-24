@@ -27,7 +27,7 @@ def wt_MD(features, label):
 
 
     # 切分训练集,测试集
-    X_train, X_test, Y_train, Y_test = train_test_split(f_v, l_v, test_size=0.2, shuffle=False)
+    X_train, X_test, Y_train, Y_test = train_test_split(f_v, l_v, test_size=0.15, shuffle=False)
 
 
     xgb = XGBRegressor().fit(X_train, Y_train)
@@ -81,10 +81,10 @@ def wt_MD(features, label):
     md = pd.Series(MD_app)
     md[0:200].plot()
     # 滑动窗口法
-    md[0:200].rolling(6).mean().plot()
+    # md[0:200].rolling(6).mean().plot()
 
     plt.show()
-
+    return md
 
 def wt_s_diff(arr):
     """
@@ -124,13 +124,14 @@ def wt_Cusum_change_point_detection(inputdata, n, confi):
     if confidence_level > confi:
         print(arr_index)
         wt_Cusum_change_point_detection(arr[0:arr_index], n, confi)
-        wt_Cusum_change_point_detection(arr[arr_index+1:], n, confi)
+        # wt_Cusum_change_point_detection(arr[arr_index+1:], n, confi)
 
     return
 
 
 
 def Pettitt_change_point_detection(inputdata):
+    print(len(inputdata))
     inputdata = np.array(inputdata)
     n = inputdata.shape[0]
     k = range(n)

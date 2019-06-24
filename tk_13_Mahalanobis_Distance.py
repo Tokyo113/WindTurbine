@@ -93,8 +93,12 @@ def WT_modeling(features, label):
             print(regr_name, "r2_score", r2_score(Y_part, Y_pred))
 
 
-
 def WT_figure(features, label):
+    """
+    绘制温度拟合曲线:实际值和预测值
+    :param features:
+    :param label:
+    """
     from sklearn.model_selection import train_test_split
     from xgboost import XGBRegressor
     import seaborn as sns
@@ -104,20 +108,20 @@ def WT_figure(features, label):
     l_v = pd.DataFrame(label).values
 
     # 切分训练集,测试集
-    X_train, X_test, Y_train, Y_test = train_test_split(f_v, l_v, test_size=0.2, shuffle=False)
+    X_train, X_test, Y_train, Y_test = train_test_split(f_v, l_v, test_size=0.15, shuffle=False)
 
 
     xgb = XGBRegressor().fit(X_train, Y_train)
     Y_pred = xgb.predict(X_test)
-    print(Y_pred)
+
     y_pre = pd.Series(Y_pred)
     y_pre.plot(c='g')
     # flatten 降维
     y_test = Y_test.flatten()
     y_test = pd.Series(y_test)
     y_test.plot(c='y')
-    plt.ylim((50, 71))
-    plt.xlim((0, 1000))
+    plt.ylim((45, 80))
+    plt.xlim((3000, 4000))
     plt.show()
 
 
