@@ -50,7 +50,7 @@ def WT_modeling(features, label):
     X_tt, X_validation, Y_tt, Y_validation = train_test_split(f_v, l_v, test_size=0.2)
     X_train, X_test, Y_train, Y_test = train_test_split(X_tt, Y_tt, test_size=0.25)
 
-    from sklearn.linear_model import LinearRegression, Ridge, Lasso
+    from sklearn.linear_model import LinearRegression, Ridge, Lasso, LogisticRegression
     from sklearn.metrics import mean_squared_error, mean_absolute_error, median_absolute_error
     from sklearn.tree import DecisionTreeRegressor
     from sklearn.svm import SVR
@@ -59,8 +59,9 @@ def WT_modeling(features, label):
     models = []
     # 线性回归
     # models.append(("LinearRegression", LinearRegression()))
-    # models.append(("Ridge", Ridge(alpha=0.6)))
+    models.append(("Ridge", Ridge(alpha=0.6)))
     # models.append(("Lasso", Lasso(alpha=0.002)))
+    # models.append(("Logistic", LogisticRegression()))
     # 决策树回归
     models.append(("DecisionTreeRegressor", DecisionTreeRegressor()))
     # 支持向量回归(误差很大)

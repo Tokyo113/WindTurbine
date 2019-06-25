@@ -15,8 +15,9 @@ from tk_tools import wt_MD, wt_Cusum_change_point_detection, Pettitt_change_poin
 from tk_13_Mahalanobis_Distance import WT_figure
 def feature_selection(df):
 
-    df = df.drop(['Avg_pitch_angle', 'Grid_frequency', 'Power_factor', 'Grid_ap',
-                  'Nacelle_revolution', 'voltage_phaseA', 'voltage_phaseB'], axis=1)
+    df = df.drop(['Avg_pitch_angle', 'Grid_frequency', 'Power_factor', 'Grid_ap', 'Grid_reap',
+                  'Nacelle_revolution', 'Consumption_reactive', 'voltage_phaseA', 'voltage_phaseB',
+                  'voltage_phaseB', 'Generation_reactive', 'Generator_bearing_tem_nondrive'], axis=1)
     print(df.describe())
     return df
 
@@ -26,25 +27,29 @@ def feature_selection(df):
 def main():
 
     # 18年下半年 32715
-    df = pd.read_csv('./data/data2018_half_year33.csv')
+    df = pd.read_csv('./data/data2018_half_year_train.csv')
     df1 = feature_selection(df)
-    # features, label, names = wt_preprocessing(df1, False)
-    # wt_params(features, label)
 
-    # 测试集  5745
-    df_test = pd.read_csv('./data/data2018_single_month_test.csv')
+    features_train, label_train, names_train = wt_preprocessing(df1, False)
+    # wt_params(features_train, label_train)
+
+    # 测试集  5732
+    df_test = pd.read_csv('./data/data2018_April_test.csv')
     df2 = feature_selection(df_test)
+
     # X_test, Y_test, name_test = wt_preprocessing(df2, False)
     # WT_modeling(features, label, X_test, Y_test)
     # md = wt_MD(features, label)
     # wt_Cusum_change_point_detection(md, 1000, 0.95)
     # print(Pettitt_change_point_detection(md))
     # print(Kendall_change_point_detection(md))
-    # 一共38460条数据
+    # 一共38447条数据
     df3 = pd.concat([df1, df2])
+    df3.to_csv('./data/data_train_test2018.csv', index = None)
     features, label, names = wt_preprocessing(df3, False)
+
     # wt_params(features, label)
-    md = wt_MD(features, label)
+    # md = wt_MD(features, label)
     # WT_figure(features, label)
 
 
@@ -52,9 +57,9 @@ def main():
     # Cusum算法:变点[1198, 1923, 3713]
     # wt_Cusum_change_point_detection(md, 5000, 0.95)
     # Pettitt算法: 3772
-    print(Pettitt_change_point_detection(md))
-    # K算法:4266
-    print(Kendall_change_point_detection(md))
+    # print(Pettitt_change_point_detection(md))
+    # # K算法:4266
+    # print(Kendall_change_point_detection(md))
 
 
 
