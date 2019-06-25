@@ -95,38 +95,40 @@ def feature_tree(features, label, names):
 
 def main():
 
-    # df = pd.read_csv('./data/feature2018_33_2.csv')
-    # print(df.count())
+    # df = pd.read_csv('./data/year/feature2018_38_2.csv')
+    #
     # # print(df.groupby("state").count())
     # # 切片:每隔5min取样
-    # df = df.iloc[129550:435304:5]
+    # df = df.iloc[129550:697448:5]
+    # print(df.tail())
     # df = df[df["Active_power"] > 1][df["state"] == 6]
     # df = df[df["Wind_speed"] <= 18]
     # df.rename(columns={'Active_power': 'active_power', 'Wind_speed': 'wind_speed'}, inplace=True)
     # df = df.drop_duplicates(subset=['date'])
+    # print(len(df))
     # df_1 = DBSCAN_cluster(df, 0.1, 25)
     # df_2 = Quartiles(df_1, 1.5, 50)
-
-    # 2018年4月测试集
-    # df_2.to_csv('./data/data2018_single_month_test.csv', index=None)
+    #
+    # # 2018年4月测试集
+    # df_2.to_csv('./data/data2018_April_test.csv', index=None)
 
 
     # 数据预处理
-    # df = pd.read_csv('./data/year/feature2018_33.csv')
-    # # 去掉功率为0的点
-    # df= df[df["Active_power"] > 1][df["state"] == 6]
-    # print(df.groupby("state").count())
-    # # 切片:每隔5min取样
-    # df = df.iloc[11::5]
-    # df = df[df["Wind_speed"] <= 18]
-    # df.rename(columns={'Active_power': 'active_power', 'Wind_speed': 'wind_speed'}, inplace=True)
-    #
-    # # wt_draw_scatter(df, 'wind_speed', 'active_power')
-    # df_1 = DBSCAN_cluster(df, 0.1, 70)
-    # df_2 = Quartiles(df_1, 1.5, 80)
-    # # df_2.to_csv('./data/data2018_single_month.csv', index=None)
-    # print(df_2.describe())
-    # # 2018年下半年
+    df = pd.read_csv('./data/year/feature2018_38.csv')
+    # 去掉功率为0的点
+    df = df[df["Active_power"] > 1][df["state"] == 6]
+    print(df.groupby("state").count())
+    # 切片:每隔5min取样
+    df = df.iloc[11::5]
+    df = df[df["Wind_speed"] <= 18]
+    df.rename(columns={'Active_power': 'active_power', 'Wind_speed': 'wind_speed'}, inplace=True)
+
+    # wt_draw_scatter(df, 'wind_speed', 'active_power')
+    df_1 = DBSCAN_cluster(df, 0.1, 70)
+    df_2 = Quartiles(df_1, 1.5, 80)
+    df_2.to_csv('./data/data2018_half_year_train.csv', index=None)
+    print(df_2.describe())
+    # 2018年下半年
     # df_2.to_csv('./data/data2018_half_year33.csv', index=None)
 
     # 33个特征,增加了前两个时刻温度
@@ -134,14 +136,14 @@ def main():
 
 
     # 特征选择
-    data2018 = './data/data2018_half_year33.csv'
-    data = pd.read_csv(data2018)
+    # data2018 = './data/data2018_half_year33.csv'
+    # data = pd.read_csv(data2018)
     # wt_draw_scatter(data, 'Gearbox_oil_temp', 'active_power')
-    features, label, names = wt_preprocessing(data, False)
+    # features, label, names = wt_preprocessing(data, False)
     # feature_RFE(features, label, names)
     # feature_filter(features, label, names)
     # feature_tree(features, label, names)
-    wt_params(features, label)
+    # wt_params(features, label)
 
 
 
