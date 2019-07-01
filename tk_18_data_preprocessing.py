@@ -23,6 +23,9 @@ def wt_draw_scatter(data, x, y):
     plt.rcParams['axes.unicode_minus'] = False  # 用来正常显示负号
     plt.scatter(data[x], data[y], c='g', s=3, alpha=.5)
     # plt.xlim((0, 18))
+    plt.xlabel('Wind Speed/(m/s)')
+    plt.ylabel('Active Power/(kW)')
+    plt.savefig('./data/figure/data_pre.png')
     plt.show()
 
 
@@ -95,7 +98,7 @@ def feature_tree(features, label, names):
 
 def main():
 
-    df = pd.read_csv('./data/year/feature2018_38_2.csv')
+    # df = pd.read_csv('./data/year/feature2018_38_2.csv')
     #
     # # print(df.groupby("state").count())
     # # 切片:每隔5min取样
@@ -114,20 +117,24 @@ def main():
 
 
     # 数据预处理
-    # df = pd.read_csv('./data/year/feature2018_38.csv')
+    df = pd.read_csv('./data/year/feature2018_38.csv')
     # # 去掉功率为0的点
-    # df = df[df["Active_power"] > 1][df["state"] == 6]
+    df = df[df["Active_power"] > 1][df["state"] == 6]
     # print(df.groupby("state").count())
     # # 切片:每隔5min取样
-    # df = df.iloc[11::5]
-    # df = df[df["Wind_speed"] <= 18]
-    # df.rename(columns={'Active_power': 'active_power', 'Wind_speed': 'wind_speed'}, inplace=True)
+    df = df.iloc[11::5]
+    df = df[df["Wind_speed"] <= 18]
+    df.rename(columns={'Active_power': 'active_power', 'Wind_speed': 'wind_speed'}, inplace=True)
     #
     # wt_draw_scatter(df, 'wind_speed', 'active_power')
-    # df_1 = DBSCAN_cluster(df, 0.1, 70)
-    # df_2 = Quartiles(df_1, 1.5, 80)
+    df_1 = DBSCAN_cluster(df, 0.1, 70)
+    df_2 = Quartiles(df_1, 1.5, 80)
+
+    wt_draw_scatter(df_2, 'wind_speed', 'active_power')
     # df_2.to_csv('./data/data2018_half_year_train.csv', index=None)
     # print(df_2.describe())
+
+
     # 2018年下半年
     # df_2.to_csv('./data/data2018_half_year33.csv', index=None)
 
