@@ -95,7 +95,7 @@ def feature_tree(features, label, names):
 
 def main():
 
-    # df = pd.read_csv('./data/year/feature2018_38_2.csv')
+    df = pd.read_csv('./data/year/feature2018_38_2.csv')
     #
     # # print(df.groupby("state").count())
     # # 切片:每隔5min取样
@@ -123,7 +123,7 @@ def main():
     # df = df[df["Wind_speed"] <= 18]
     # df.rename(columns={'Active_power': 'active_power', 'Wind_speed': 'wind_speed'}, inplace=True)
     #
-    # # wt_draw_scatter(df, 'wind_speed', 'active_power')
+    # wt_draw_scatter(df, 'wind_speed', 'active_power')
     # df_1 = DBSCAN_cluster(df, 0.1, 70)
     # df_2 = Quartiles(df_1, 1.5, 80)
     # df_2.to_csv('./data/data2018_half_year_train.csv', index=None)
@@ -136,13 +136,13 @@ def main():
 
 
     # 特征选择
-    data2018 = './data/data2018_half_year_train.csv'
-    data = pd.read_csv(data2018)
+    # data2018 = './data/data2018_half_year_train.csv'
+    # data = pd.read_csv(data2018)
     # wt_draw_scatter(data, 'Gearbox_oil_temp', 'active_power')
-    features, label, names = wt_preprocessing(data, False)
-    feature_RFE(features, label, names)
-    feature_filter(features, label, names)
-    feature_tree(features, label, names)
+    # features, label, names = wt_preprocessing(data, False)
+    # feature_RFE(features, label, names)
+    # feature_filter(features, label, names)
+    # feature_tree(features, label, names)
     # wt_params(features, label)
 
 
