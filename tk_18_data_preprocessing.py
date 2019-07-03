@@ -57,7 +57,7 @@ def feature_RFE(features, label, names):
 
     lr = LinearRegression()
 
-    rfe = RFE(lr, n_features_to_select=20)
+    rfe = RFE(lr, n_features_to_select=10)
     rfe.fit(features, label)
     print("Features sorted by their rank:")
     print(sorted(zip(map(lambda x: round(x, 4), rfe.ranking_), names)))
@@ -70,7 +70,7 @@ def feature_filter(features, label, names):
     :param data:
     """
     from sklearn.feature_selection import SelectKBest, f_regression
-    fil = SelectKBest(f_regression, k=20)
+    fil = SelectKBest(f_regression, k=10)
     fil.fit(features, label)
     print(sorted(zip(map(lambda x: round(x, 4), fil.scores_), names), reverse=True))
 
@@ -82,7 +82,8 @@ def feature_tree(features, label, names):
     """
     from sklearn.ensemble import RandomForestRegressor, ExtraTreesRegressor
     from sklearn.feature_selection import SelectFromModel
-    clf = ExtraTreesRegressor(n_estimators=50)
+    # clf = ExtraTreesRegressor(n_estimators=50)
+    clf = RandomForestRegressor(n_estimators=20)
     clf.fit(features, label)
     print(features.shape)
     print(sorted(zip(map(lambda x: round(x, 4), clf.feature_importances_), names), reverse=True))
@@ -117,20 +118,20 @@ def main():
 
 
     # 数据预处理
-    df = pd.read_csv('./data/year/feature2018_38.csv')
-    # # 去掉功率为0的点
-    df = df[df["Active_power"] > 1][df["state"] == 6]
-    # print(df.groupby("state").count())
-    # # 切片:每隔5min取样
-    df = df.iloc[11::5]
-    df = df[df["Wind_speed"] <= 18]
-    df.rename(columns={'Active_power': 'active_power', 'Wind_speed': 'wind_speed'}, inplace=True)
+    # df = pd.read_csv('./data/year/feature2018_38.csv')
+    # # # 去掉功率为0的点
+    # df = df[df["Active_power"] > 1][df["state"] == 6]
+    # # print(df.groupby("state").count())
+    # # # 切片:每隔5min取样
+    # df = df.iloc[11::5]
+    # df = df[df["Wind_speed"] <= 18]
+    # df.rename(columns={'Active_power': 'active_power', 'Wind_speed': 'wind_speed'}, inplace=True)
+    # #
+    # # wt_draw_scatter(df, 'wind_speed', 'active_power')
+    # df_1 = DBSCAN_cluster(df, 0.1, 70)
+    # df_2 = Quartiles(df_1, 1.5, 80)
     #
-    # wt_draw_scatter(df, 'wind_speed', 'active_power')
-    df_1 = DBSCAN_cluster(df, 0.1, 70)
-    df_2 = Quartiles(df_1, 1.5, 80)
-
-    wt_draw_scatter(df_2, 'wind_speed', 'active_power')
+    # wt_draw_scatter(df_2, 'wind_speed', 'active_power')
     # df_2.to_csv('./data/data2018_half_year_train.csv', index=None)
     # print(df_2.describe())
 
@@ -143,13 +144,13 @@ def main():
 
 
     # 特征选择
-    # data2018 = './data/data2018_half_year_train.csv'
-    # data = pd.read_csv(data2018)
+    data2018 = './data/data2018_half_year_train.csv'
+    data = pd.read_csv(data2018)
     # wt_draw_scatter(data, 'Gearbox_oil_temp', 'active_power')
-    # features, label, names = wt_preprocessing(data, False)
-    # feature_RFE(features, label, names)
-    # feature_filter(features, label, names)
-    # feature_tree(features, label, names)
+    features, label, names = wt_preprocessing(data, False)
+    feature_RFE(features, label, names)
+    feature_filter(features, label, names)
+    feature_tree(features, label, names)
     # wt_params(features, label)
 
 

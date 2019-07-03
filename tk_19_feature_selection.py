@@ -18,8 +18,13 @@ def feature_selection(df):
     df = df.drop(['Avg_pitch_angle', 'Grid_frequency', 'Power_factor', 'Grid_ap', 'Grid_reap',
                   'Nacelle_revolution', 'Consumption_reactive', 'voltage_phaseA', 'voltage_phaseB',
                   'voltage_phaseB', 'Generation_reactive', 'Generator_bearing_tem_nondrive'], axis=1)
-    print(df.describe())
-    return df
+
+    df1 = df[['active_power', 'wind_speed', 'temp_1', 'temp_2', 'Gearbox_bearing_temp_A',
+              'Gearbox_bearing_temp_A', 'Generator_speed', 'Rotor_speed', 'Gener_Stator_tempL3', 'voltage_phaseC',
+              'PCS_torque', 'Consumption_active', 'Generator_bearing_tem_drive', 'Pitch_angle', 'PCS_rotor_temp',
+              'date', 'state', 'Gearbox_oil_temp']]
+    print(df1.head())
+    return df1
 
 
 
@@ -31,11 +36,11 @@ def main():
     df1 = feature_selection(df)
 
     features_train, label_train, names_train = wt_preprocessing(df1, False)
-    # wt_params(features_train, label_train)
+    wt_params(features_train, label_train)
 
     # 测试集  5732
-    df_test = pd.read_csv('./data/data2018_April_test.csv')
-    df2 = feature_selection(df_test)
+    # df_test = pd.read_csv('./data/data2018_April_test.csv')
+    # df2 = feature_selection(df_test)
 
     # X_test, Y_test, name_test = wt_preprocessing(df2, False)
     # WT_modeling(features, label, X_test, Y_test)
@@ -43,10 +48,12 @@ def main():
     # wt_Cusum_change_point_detection(md, 1000, 0.95)
     # print(Pettitt_change_point_detection(md))
     # print(Kendall_change_point_detection(md))
+
+
     # 一共38447条数据
-    df3 = pd.concat([df1, df2])
-    df3.to_csv('./data/data_train_test2018.csv', index = None)
-    features, label, names = wt_preprocessing(df3, False)
+    # df3 = pd.concat([df1, df2])
+    # df3.to_csv('./data/data_train_test2018.csv', index = None)
+    # features, label, names = wt_preprocessing(df3, False)
 
     # wt_params(features, label)
     # md = wt_MD(features, label)

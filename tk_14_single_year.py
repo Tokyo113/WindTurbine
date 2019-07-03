@@ -123,12 +123,13 @@ def DBSCAN_cluster(data, eps, minPts):
     plt.rcParams['axes.unicode_minus'] = False  # 用来正常显示负号
 
     # 正常点与离群点
-    plt.scatter(normal["wind_speed"], normal["active_power"], c='g', s=3, alpha=.5)
-    plt.scatter(outier["wind_speed"], outier["active_power"], c='r', s=3, alpha=.5)
+    plt.scatter(normal["wind_speed"], normal["active_power"], c='g', s=3, alpha=.5, label='normal points')
+    plt.scatter(outier["wind_speed"], outier["active_power"], c='r', s=3, alpha=.5, label='outlier')
     plt.xlabel('Wind Speed/(m/s)')
     plt.ylabel('Active Power/(kW)')
+    plt.legend()
     plt.show()
-    plt.savefig('./data/figure/outlier.png')
+    # plt.savefig('./data/figure/outlier.png')
 
     normal = normal.drop("category", axis=1)
     print(normal.describe())
