@@ -23,7 +23,12 @@ def feature_selection(df):
               'Gearbox_bearing_temp_A', 'Generator_speed', 'Rotor_speed', 'Gener_Stator_tempL3', 'voltage_phaseC',
               'PCS_torque', 'Consumption_active', 'Generator_bearing_tem_drive', 'Pitch_angle', 'PCS_rotor_temp',
               'date', 'state', 'Gearbox_oil_temp']]
-    print(df1.head())
+    # 不带前两个时刻温度 效果很差
+    # df2 = df[['active_power', 'wind_speed',  'Gearbox_bearing_temp_A',
+    #           'Gearbox_bearing_temp_A', 'Generator_speed', 'Rotor_speed', 'Gener_Stator_tempL3', 'voltage_phaseC',
+    #           'PCS_torque', 'Consumption_active', 'Generator_bearing_tem_drive', 'Pitch_angle', 'PCS_rotor_temp',
+    #           'date', 'state', 'Gearbox_oil_temp']]
+
     return df1
 
 
