@@ -243,6 +243,56 @@ def Kendall_change_point_detection(inputdata):
     return K
 
 
+def WT_modeling(features, label):
+    """
+    回归模型对比,带交叉验证
+    :param features:
+    :param label:
+    """
+    from sklearn.model_selection import train_test_split
+    f_v = pd.DataFrame(features).values
+    f_names = pd.DataFrame(features).columns.values
+    l_v = pd.DataFrame(label).values
+
+    # 切分训练集,测试集,验证集
+    # X_tt, X_validation, Y_tt, Y_validation = train_test_split(f_v, l_v, test_size=0.2)
+    X_train, X_test, Y_train, Y_test = train_test_split(f_v, l_v, test_size=0.15)
+    from sklearn.model_selection import cross_val_score, cross_validate
+    from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
+    from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
+    from xgboost import XGBRegressor
+    models = []
+
+    models.append(("RandomForestRegressor", RandomForestRegressor()))
+
+    # GBDT 回归
+    models.append(("GradientBoostingRegressor", GradientBoostingRegressor()))
+    # XGBoost
+    models.append(("XGBoost", XGBRegressor()))
+    for regr_name, regr in models:
+        regr.fit(X_train, Y_train)
+        # 五折交叉验证
+        scoring = ['r2', 'neg_mean_absolute_error', 'neg_mean_squared_error']
+        scores = cross_validate(regr, X_train, Y_train, scoring=scoring, cv=5)
+        print('MAE', regr_name,  scores['test_neg_mean_absolute_error'].mean())
+        print('R2', regr_name, scores['test_r2'].mean())
+
+        print('RMSE', regr_name, np.sqrt(scores['test_neg_mean_squared_error']*(-1)).mean())
+
+        xy_lst = [(X_train, Y_train), (X_test, Y_test)]
+        for i in range(len(xy_lst)):
+            X_part = xy_lst[i][0]
+            Y_part = xy_lst[i][1]
+            Y_pred = regr.predict(X_part)
+
+            print(i)
+            # 0--训练集, 1--测试集
+            print(regr_name, "RMSE", np.sqrt(mean_squared_error(Y_part, Y_pred)))
+            print(regr_name, "MAE", mean_absolute_error(Y_part, Y_pred))
+            print(regr_name, "R2", r2_score(Y_part, Y_pred))
+
+
+
 
 def main():
     input = [10.7, 13, 11.4, 11.5, 12.5, 14.1, 14.8, 14.1, 12.6, 16, 11.7, 10.6,
