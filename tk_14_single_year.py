@@ -115,7 +115,8 @@ def DBSCAN_cluster(data, eps, minPts):
     cluster_data.columns = list(data.columns) + ["category"]
     print(cluster_data.groupby("category").count())
 
-    cluster_data["category"][(cluster_data["category"] == -1) & (cluster_data["active_power"] > 2000)] = 0
+    # 防止将上部曲线识别为异常点
+    cluster_data["category"][(cluster_data["category"] == -1) & (cluster_data["active_power"] > 1500)] = 0
     outier = cluster_data[(cluster_data["category"] == -1)]
     normal = cluster_data[cluster_data["category"] != -1]
     # 绘图
