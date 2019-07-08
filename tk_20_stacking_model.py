@@ -25,12 +25,12 @@ def stacking_model(features, label):
 
     srgr.fit(X_train, Y_train)
     # 五折交叉验证
-    # scoring = ['r2', 'neg_mean_absolute_error', 'neg_mean_squared_error']
-    # scores = cross_validate(srgr, X_train, Y_train, scoring=scoring, cv=5)
-    # print('MAE', 'Stacking', scores['test_neg_mean_absolute_error'].mean())
-    # print('R2', 'Stacking', scores['test_r2'].mean())
-    #
-    # print('RMSE', 'Stacking', np.sqrt(scores['test_neg_mean_squared_error'] * (-1)).mean())
+    scoring = ['r2', 'neg_mean_absolute_error', 'neg_mean_squared_error']
+    scores = cross_validate(srgr, X_train, Y_train, scoring=scoring, cv=5)
+    print('MAE', 'Stacking', scores['test_neg_mean_absolute_error'].mean())
+    print('R2', 'Stacking', scores['test_r2'].mean())
+
+    print('RMSE', 'Stacking', np.sqrt(scores['test_neg_mean_squared_error'] * (-1)).mean())
     # 训练集
     Y_pred1 = srgr.predict(X_train)
     print("RMSE", np.sqrt(mean_squared_error(Y_train, Y_pred1)))
@@ -48,13 +48,15 @@ def main():
     import numpy as np
     from tk_18_data_preprocessing import wt_preprocessing
     from tk_tools import WT_modeling
-    df = pd.read_csv('./data/data2018_half_year_train.csv')
+    # #57号风机
+    df = pd.read_csv('./data/final data/#57/data2017_half_year_train.csv')
+    # #173号风机
+    # df = pd.read_csv('./data/final data/#173/data2018_half_year_train.csv')
     # df = df.drop(['temp_1', 'temp_2'], axis=1)
 
     features, label, names = wt_preprocessing(df, False)
     stacking_model(features, label)
     # WT_modeling(features, label)
-
 
 
 

@@ -146,7 +146,7 @@ def main():
 
 
     # 特征选择
-    # data2018 = './data/data2018_half_year_train.csv'
+    data2018 = './data/data2018_half_year_train.csv'
     # data = pd.read_csv(data2018)
     # wt_draw_scatter(data, 'Gearbox_oil_temp', 'active_power')
     # features, label, names = wt_preprocessing(data, False)
