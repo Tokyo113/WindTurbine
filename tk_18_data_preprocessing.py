@@ -99,7 +99,7 @@ def feature_tree(features, label, names):
 
 def main():
 
-    # df = pd.read_csv('./data/year/feature2018_38_2.csv')
+    # df = pd.read_csv('./data/hfj159/raw_93_2018.csv')
     #
     # # print(df.groupby("state").count())
     # # 切片:每隔5min取样
@@ -118,22 +118,25 @@ def main():
 
 
     # 数据预处理
-    # df = pd.read_csv('./data/hfj057/raw_24_2018.csv')
+    df = pd.read_csv('./data/hfj159/raw_93_2018.csv')
     # 去掉功率为0的点
-    # df = df[df["Active_power"] > 1][df["state"] == 6]
+    df = df[df["Active_power"] > 1][df["state"] == 6]
     # # print(df.groupby("state").count())
     # # 切片:每隔5min取样
-    # df = df.iloc[11:48351:5]
+    # print(df[df['date'] == '2018-03-01 00:00:00'])
+    # print(df[df['date'] == '2018-04-01 00:00:00'])
+    df = df.iloc[84939:129550:5]
     #
-    # df = df[df["Wind_speed"] <= 20]
-    # df.rename(columns={'Active_power': 'active_power', 'Wind_speed': 'wind_speed'}, inplace=True)
-    # # #
-    # wt_draw_scatter(df, 'wind_speed', 'active_power')
-    # df_1 = DBSCAN_cluster(df, 0.1, 10)
-    # df_2 = Quartiles(df_1, 1.5, 80)
-    # df_2 = df_2.iloc[:6566]
-    # # wt_draw_scatter(df_2, 'wind_speed', 'active_power')
-    # df_2.to_csv('./data/final data/#57/data2018_Jan_test.csv', index=None)
+    df = df[df["Wind_speed"] <= 20]
+    df = df.drop_duplicates(subset=['date'])
+    df.rename(columns={'Active_power': 'active_power', 'Wind_speed': 'wind_speed'}, inplace=True)
+    # #
+    # # wt_draw_scatter(df, 'wind_speed', 'active_power')
+    df_1 = DBSCAN_cluster(df, 0.1, 10)
+    df_2 = Quartiles(df_1, 2, 80)
+    # # df_2 = df_2.iloc[:6566]
+    # # # wt_draw_scatter(df_2, 'wind_speed', 'active_power')
+    df_2.to_csv('./data/final data/#159/data2018_Mar_test.csv', index=None)
     #
     # print(df_2.describe())
 

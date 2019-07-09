@@ -24,19 +24,35 @@ import seaborn as sns
 # df9.columns = ['date', 'shutdown_time', 'bingwang_time', 'Gearbox_bearing_temp_A', 'Gearbox_bearing_temp_B', 'Gener_Stator_tempL1', 'Gener_Stator_tempL2', 'Gener_Stator_tempL3']
 
 # 24号风机 2017下半年，2018上半年
-df1 = pd.read_csv('./data/hfj057/24_1_2018-01-01~2018-07-01.csv', header=None)
+# df1 = pd.read_csv('./data/hfj057/24_1_2018-01-01~2018-07-01.csv', header=None)
+# df1.columns = ['date', 'Grid_ap', 'Grid_reap', 'state', 'voltage_phaseA', 'voltage_phaseB']
+# df2 = pd.read_csv('./data/hfj057/24_2_2018-01-01~2018-07-01.csv', header=None)
+# df2.columns = ['date', 'voltage_phaseC', 'Generation_active', 'Consumption_active', 'Generation_reactive', 'Consumption_reactive']
+# df3 = pd.read_csv('./data/hfj057/24_3_2018-01-01~2018-07-01.csv', header=None)
+# df3.columns = ['date', 'Generator_speed', 'Rotor_speed', 'Gearbox_oil_temp', 'Generator_bearing_tem_drive', 'Generator_bearing_tem_nondrive']
+# df4 = pd.read_csv('./data/hfj057/24_4_2018-01-01~2018-07-01.csv', header=None)
+# df4.columns = ['date', 'Power_factor', 'Grid_frequency', 'Pitch_angle', 'PCS_speed', 'PCS_torque']
+# df5 = pd.read_csv('./data/hfj057/24_5_2018-01-01~2018-07-01.csv', header=None)
+# df5.columns = ['date', 'PCS_rotor_temp', 'Nacelle_revolution', 'Wind_speed', 'Avg_Wind_speed_3s', 'Avg_wind_speed_5min']
+# df6 = pd.read_csv('./data/hfj057/24_6_2018-01-01~2018-07-01.csv', header=None)
+# df6.columns = ['date', 'Avg_wind_speed_30s', 'Avg_pitch_angle', 'Active_power', 'Avg_active_power_30s', 'Avg_active_pow_300s']
+# df9 = pd.read_csv('./data/hfj057/24_9_2018-01-01~2018-07-01.csv', header=None)
+# df9.columns = ['date', 'shutdown_time', 'bingwang_time', 'Gearbox_bearing_temp_A', 'Gearbox_bearing_temp_B', 'Gener_Stator_tempL1', 'Gener_Stator_tempL2', 'Gener_Stator_tempL3']
+
+# 93号风机 HFJ159
+df1 = pd.read_csv('./data/hfj159/93_1_2018-01-01~2018-07-01.csv', header=None)
 df1.columns = ['date', 'Grid_ap', 'Grid_reap', 'state', 'voltage_phaseA', 'voltage_phaseB']
-df2 = pd.read_csv('./data/hfj057/24_2_2018-01-01~2018-07-01.csv', header=None)
+df2 = pd.read_csv('./data/hfj159/93_2_2018-01-01~2018-07-01.csv', header=None)
 df2.columns = ['date', 'voltage_phaseC', 'Generation_active', 'Consumption_active', 'Generation_reactive', 'Consumption_reactive']
-df3 = pd.read_csv('./data/hfj057/24_3_2018-01-01~2018-07-01.csv', header=None)
+df3 = pd.read_csv('./data/hfj159/93_3_2018-01-01~2018-07-01.csv', header=None)
 df3.columns = ['date', 'Generator_speed', 'Rotor_speed', 'Gearbox_oil_temp', 'Generator_bearing_tem_drive', 'Generator_bearing_tem_nondrive']
-df4 = pd.read_csv('./data/hfj057/24_4_2018-01-01~2018-07-01.csv', header=None)
+df4 = pd.read_csv('./data/hfj159/93_4_2018-01-01~2018-07-01.csv', header=None)
 df4.columns = ['date', 'Power_factor', 'Grid_frequency', 'Pitch_angle', 'PCS_speed', 'PCS_torque']
-df5 = pd.read_csv('./data/hfj057/24_5_2018-01-01~2018-07-01.csv', header=None)
+df5 = pd.read_csv('./data/hfj159/93_5_2018-01-01~2018-07-01.csv', header=None)
 df5.columns = ['date', 'PCS_rotor_temp', 'Nacelle_revolution', 'Wind_speed', 'Avg_Wind_speed_3s', 'Avg_wind_speed_5min']
-df6 = pd.read_csv('./data/hfj057/24_6_2018-01-01~2018-07-01.csv', header=None)
+df6 = pd.read_csv('./data/hfj159/93_6_2018-01-01~2018-07-01.csv', header=None)
 df6.columns = ['date', 'Avg_wind_speed_30s', 'Avg_pitch_angle', 'Active_power', 'Avg_active_power_30s', 'Avg_active_pow_300s']
-df9 = pd.read_csv('./data/hfj057/24_9_2018-01-01~2018-07-01.csv', header=None)
+df9 = pd.read_csv('./data/hfj159/93_9_2018-01-01~2018-07-01.csv', header=None)
 df9.columns = ['date', 'shutdown_time', 'bingwang_time', 'Gearbox_bearing_temp_A', 'Gearbox_bearing_temp_B', 'Gener_Stator_tempL1', 'Gener_Stator_tempL2', 'Gener_Stator_tempL3']
 
 df_lst = [df2, df3, df4, df5, df6, df9]
@@ -55,4 +71,7 @@ print(len(df))
 
 # hfj057 号风机--24号原始数据
 # df.to_csv('./data/hfj057/raw_24_2017.csv', index=None)
-df.to_csv('./data/hfj057/raw_24_2018.csv', index=None)
+
+# hfj159 号风机--93号原始数据
+df.to_csv('./data/hfj159/raw_93_2018.csv', index=None)
+# df.to_csv('./data/hfj057/raw_24_2018.csv', index=None)
