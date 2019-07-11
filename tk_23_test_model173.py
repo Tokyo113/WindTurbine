@@ -115,7 +115,7 @@ def main():
     plt.xlabel('Date')
     plt.hlines(y=80, xmin=0, xmax=6200, colors='r', label='Upper Limit')
     plt.legend(loc='lower left', ncol=2)
-    plt.savefig('./data/figure/#159result.png', dpi=300)
+    plt.savefig('./data/figure/#173result.png', dpi=300)
     plt.show()
 
 
