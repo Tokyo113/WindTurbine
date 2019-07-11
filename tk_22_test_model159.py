@@ -63,61 +63,61 @@ def main():
     from tk_18_data_preprocessing import wt_preprocessing
     import matplotlib.pyplot as plt
     from tk_tools import wt_Cusum_change_point_detection
-    df_train = pd.read_csv('./data/final data/#57/data2017_half_year_train.csv')
+    df_train = pd.read_csv('./data/final data/#159/data2017_half_year_train.csv')
     X_train, Y_train, names = wt_preprocessing(df_train, False)
-    df_test = pd.read_csv('./data/final data/#57/data2018_Jan_test2.csv')
-    # df_test = df_test.drop_duplicates(subset=['date'])
+    df_test = pd.read_csv('./data/final data/#159/data2018_April_test.csv')
+    df_test = df_test.drop_duplicates(subset=['date'])
 
     X_test, Y_test, names2 = wt_preprocessing(df_test, False)
-    md_57 = stacking_MD(X_train, Y_train, X_test, Y_test)
-    # wt_Cusum_change_point_detection(md_57, 1000, 0.99)
+    md_159 = stacking_MD(X_train, Y_train, X_test, Y_test)
+    # wt_Cusum_change_point_detection(md_159, 1000, 0.99)
     f = plt.figure(figsize=(8, 8))
 
     # 计算Cusum序列
-    arr = np.array(md_57)
+    arr = np.array(md_159)
     s = np.zeros(len(arr) + 1)
     for i in range(1, len(arr)):
         s[i] = s[i - 1] + (arr[i - 1] - arr.mean())
     s = pd.Series(s)
     # 马氏距离序列图
     ax1 = f.add_subplot(3, 1, 1)
-    md_57.plot()
-    x_ticks = ax1.set_xticks([0, 1000, 2000, 3000, 4000, 5000, 5900])
-    x_labels = ax1.set_xticklabels(["Jan/01", "Jan/05", "Jan/11", "Jan/18", "Jan/21", "Jan/27",  "Feb/01"],
+    md_159.plot()
+    x_ticks = ax1.set_xticks([0, 1000, 2000, 3000, 4000, 5000, 6000])
+    x_labels = ax1.set_xticklabels(["Mar/30", "Apr/02", "Apr/07", "Apr/12", "Apr/17", "Apr/23",  "Apr/28"],
                                    rotation=30, fontsize="small")
     plt.ylabel('Mahalanobis Distance')
 
     ax2 = f.add_subplot(3, 1, 2)
     s.plot()
-    x_ticks = ax2.set_xticks([0, 1000, 2000, 3000, 4000, 5000, 5900])
-    x_labels = ax2.set_xticklabels(["Jan/01", "Jan/05", "Jan/11", "Jan/18", "Jan/21", "Jan/27", "Feb/01"],
+    x_ticks = ax2.set_xticks([0, 1000, 2000, 3000, 4000, 5000, 6000])
+    x_labels = ax2.set_xticklabels(["Mar/30", "Apr/02", "Apr/07", "Apr/12", "Apr/17", "Apr/23",  "Apr/28"],
                                    rotation=30, fontsize="small")
     plt.ylabel('CUSUM chart')
     # 加注释
-    plt.annotate('Change Point 1', xy=(488, s[488]), xycoords='data',
-                 xytext=(-30, -70), textcoords='offset points',
-                 arrowprops=dict(arrowstyle='->', connectionstyle='arc3,rad=0'))
-    plt.annotate('Change Point 2', xy=(1265, s[1265]), xycoords='data',
-                 xytext=(+10, -40), textcoords='offset points',
+    plt.annotate('Change Point 1', xy=(210, s[210]), xycoords='data',
+                 xytext=(+20, +50), textcoords='offset points',
                  arrowprops=dict(arrowstyle='->', connectionstyle='arc3,rad=.2'))
-    plt.annotate('Change Point 3', xy=(2567, s[2567]), xycoords='data',
-                 xytext=(+25, -5), textcoords='offset points',
+    plt.annotate('Change Point 2', xy=(4195, s[4195]), xycoords='data',
+                 xytext=(+10, -20), textcoords='offset points',
                  arrowprops=dict(arrowstyle='->', connectionstyle='arc3,rad=.2'))
-    plt.annotate('Change Point 4', xy=(4252, s[4252]), xycoords='data',
-                 xytext=(+25, +10), textcoords='offset points',
+    plt.annotate('Change Point 3', xy=(4630, s[4630]), xycoords='data',
+                 xytext=(+25, -20), textcoords='offset points',
                  arrowprops=dict(arrowstyle='->', connectionstyle='arc3,rad=.2'))
+    # plt.annotate('Change Point 4', xy=(4252, s[4252]), xycoords='data',
+    #              xytext=(+25, +10), textcoords='offset points',
+    #              arrowprops=dict(arrowstyle='->', connectionstyle='arc3,rad=.2'))
 
     ax3 = f.add_subplot(3, 1, 3)
     df_oil = df_test['Gearbox_oil_temp']
     df_oil.plot(label='Measured Temperature')
-    x_ticks = ax3.set_xticks([0, 1000, 2000, 3000, 4000, 5000, 5900])
-    x_labels = ax3.set_xticklabels(["Jan/01", "Jan/05", "Jan/11", "Jan/18", "Jan/21", "Jan/27", "Feb/01"],
+    x_ticks = ax3.set_xticks([0, 1000, 2000, 3000, 4000, 5000, 6000])
+    x_labels = ax3.set_xticklabels(["Mar/30", "Apr/02", "Apr/07", "Apr/12", "Apr/17", "Apr/23",  "Apr/28"],
                                    rotation=30, fontsize="small")
     plt.ylabel('Oil Temperature/(Deg.C)')
     plt.xlabel('Date')
-    plt.hlines(y=80, xmin=0, xmax=5900, colors='r', label='Upper Limit')
-    plt.legend(ncol=2)
-    plt.savefig('./data/figure/#57result.png', dpi=300)
+    plt.hlines(y=80, xmin=0, xmax=6200, colors='r', label='Upper Limit')
+    plt.legend(loc='lower left', ncol=2)
+    plt.savefig('./data/figure/#159result.png', dpi=300)
     plt.show()
 
 
