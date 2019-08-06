@@ -125,11 +125,11 @@ def DBSCAN_cluster(data, eps, minPts):
 
     # 正常点与离群点
     plt.scatter(normal["wind_speed"], normal["active_power"], c='g', s=3, alpha=.5, label='normal points')
-    plt.scatter(outier["wind_speed"], outier["active_power"], c='r', s=3, alpha=.5, label='outlier')
+    plt.scatter(outier["wind_speed"], outier["active_power"], c='r', s=3, alpha=.5, label='outliers')
     plt.xlabel('Wind Speed/(m/s)')
     plt.ylabel('Active Power/(kW)')
-    plt.legend()
-    # plt.savefig('./data/paper/outlier1.png')
+    plt.legend(loc='upper left')
+    plt.savefig('./data/paper/outlier1.png')
     plt.show()
 
 
@@ -207,7 +207,7 @@ def Quartiles(data, k, cut_num):
     plt.xlabel('Wind Speed/(m/s)')
     plt.ylabel('Active Power/(kW)')
     plt.legend()
-    # plt.savefig('./data/paper/outlier2.png')
+    plt.savefig('./data/paper/outlier2.png')
     plt.show()
 
     normal = normal.drop("outlier", axis=1)
