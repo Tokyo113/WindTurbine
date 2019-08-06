@@ -129,7 +129,7 @@ def DBSCAN_cluster(data, eps, minPts):
     plt.xlabel('Wind Speed/(m/s)')
     plt.ylabel('Active Power/(kW)')
     plt.legend(loc='upper left')
-    plt.savefig('./data/paper/outlier1.png')
+    # plt.savefig('./data/paper/outlier1.png')
     plt.show()
 
 
@@ -207,7 +207,7 @@ def Quartiles(data, k, cut_num):
     plt.xlabel('Wind Speed/(m/s)')
     plt.ylabel('Active Power/(kW)')
     plt.legend()
-    plt.savefig('./data/paper/outlier2.png')
+    # plt.savefig('./data/paper/outlier2.png')
     plt.show()
 
     normal = normal.drop("outlier", axis=1)
