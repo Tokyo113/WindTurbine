@@ -25,7 +25,7 @@ def wt_draw_scatter(data, x, y):
     # plt.xlim((0, 18))
     plt.xlabel('Wind Speed/(m/s)')
     plt.ylabel('Active Power/(kW)')
-    plt.savefig('./data/figure/data_pre.png')
+    # plt.savefig('./data/paper/data_pre.png')
     plt.show()
 
 

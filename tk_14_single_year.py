@@ -115,8 +115,8 @@ def DBSCAN_cluster(data, eps, minPts):
     cluster_data.columns = list(data.columns) + ["category"]
     print(cluster_data.groupby("category").count())
 
-    # 防止将上部曲线识别为异常点  两种风机:1500和2000
-    cluster_data["category"][(cluster_data["category"] == -1) & (cluster_data["active_power"] > 1550)] = 0
+    # 防止将上部曲线识别为异常点  两种风机:1500---1550和2000
+    cluster_data["category"][(cluster_data["category"] == -1) & (cluster_data["active_power"] > 2000)] = 0
     outier = cluster_data[(cluster_data["category"] == -1)]
     normal = cluster_data[cluster_data["category"] != -1]
     # 绘图
@@ -129,8 +129,9 @@ def DBSCAN_cluster(data, eps, minPts):
     plt.xlabel('Wind Speed/(m/s)')
     plt.ylabel('Active Power/(kW)')
     plt.legend()
+    # plt.savefig('./data/paper/outlier1.png')
     plt.show()
-    # plt.savefig('./data/figure/outlier.png')
+
 
     normal = normal.drop("category", axis=1)
     print(normal.describe())
@@ -206,6 +207,7 @@ def Quartiles(data, k, cut_num):
     plt.xlabel('Wind Speed/(m/s)')
     plt.ylabel('Active Power/(kW)')
     plt.legend()
+    # plt.savefig('./data/paper/outlier2.png')
     plt.show()
 
     normal = normal.drop("outlier", axis=1)
