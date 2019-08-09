@@ -32,18 +32,53 @@ def stacking_model(features, label):
     #
     # print('RMSE', 'Stacking', np.sqrt(scores['test_neg_mean_squared_error'] * (-1)).mean())
     # 训练集
+    Y_pred1 = srgr.predict(X_train)
+    print("RMSE", np.sqrt(mean_squared_error(Y_train, Y_pred1)))
+    print("MAE", mean_absolute_error(Y_train, Y_pred1))
+    print("r2_score", r2_score(Y_train, Y_pred1))
+    # 测试集
+    Y_pred = srgr.predict(X_test)
+    print("RMSE", np.sqrt(mean_squared_error(Y_test, Y_pred)))
+    print("MAE", mean_absolute_error(Y_test, Y_pred))
+    print("r2_score", r2_score(Y_test, Y_pred))
+    return Y_test, Y_pred
+
+
+def stacking_model2(X_train, Y_train, X_test, Y_test):
+    import numpy as np
+    from sklearn.model_selection import cross_validate
+    from sklearn.model_selection import train_test_split
+    from xgboost import XGBRegressor
+    from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
+    from mlxtend.regressor import StackingCVRegressor
+    from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
+
+    xgb = XGBRegressor()
+    rfr = RandomForestRegressor()
+    gbdt = GradientBoostingRegressor()
+
+
+    srgr = StackingCVRegressor(regressors=[xgb, rfr, gbdt], meta_regressor=xgb, cv=5)
+
+    srgr.fit(X_train, Y_train)
+    # 五折交叉验证
+    # scoring = ['r2', 'neg_mean_absolute_error', 'neg_mean_squared_error']
+    # scores = cross_validate(srgr, X_train, Y_train, scoring=scoring, cv=5)
+    # print('MAE', 'Stacking', scores['test_neg_mean_absolute_error'].mean())
+    # print('R2', 'Stacking', scores['test_r2'].mean())
+    #
+    # print('RMSE', 'Stacking', np.sqrt(scores['test_neg_mean_squared_error'] * (-1)).mean())
+    # 训练集
     # Y_pred1 = srgr.predict(X_train)
     # print("RMSE", np.sqrt(mean_squared_error(Y_train, Y_pred1)))
     # print("MAE", mean_absolute_error(Y_train, Y_pred1))
     # print("r2_score", r2_score(Y_train, Y_pred1))
     # 测试集
     Y_pred = srgr.predict(X_test)
-    # print("RMSE", np.sqrt(mean_squared_error(Y_test, Y_pred)))
-    # print("MAE", mean_absolute_error(Y_test, Y_pred))
-    # print("r2_score", r2_score(Y_test, Y_pred))
+    print("RMSE", np.sqrt(mean_squared_error(Y_test, Y_pred)))
+    print("MAE", mean_absolute_error(Y_test, Y_pred))
+    print("r2_score", r2_score(Y_test, Y_pred))
     return Y_test, Y_pred
-
-
 
 
 def main():
