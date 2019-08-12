@@ -52,15 +52,18 @@ def stacking_model2(X_train, Y_train, X_test, Y_test):
     from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
     from mlxtend.regressor import StackingCVRegressor
     from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
-
+    from sklearn.externals import joblib
     xgb = XGBRegressor()
     rfr = RandomForestRegressor()
     gbdt = GradientBoostingRegressor()
 
 
-    srgr = StackingCVRegressor(regressors=[xgb, rfr, gbdt], meta_regressor=xgb, cv=5)
+    # srgr = StackingCVRegressor(regressors=[xgb, rfr, gbdt], meta_regressor=xgb, cv=5)
+    #
+    # srgr.fit(X_train, Y_train)
+    # 直接读取保存好的模型  stacking.pkl---type C
+    srgr = joblib.load('stacking.pkl')
 
-    srgr.fit(X_train, Y_train)
     # 五折交叉验证
     # scoring = ['r2', 'neg_mean_absolute_error', 'neg_mean_squared_error']
     # scores = cross_validate(srgr, X_train, Y_train, scoring=scoring, cv=5)
@@ -69,10 +72,10 @@ def stacking_model2(X_train, Y_train, X_test, Y_test):
     #
     # print('RMSE', 'Stacking', np.sqrt(scores['test_neg_mean_squared_error'] * (-1)).mean())
     # 训练集
-    # Y_pred1 = srgr.predict(X_train)
-    # print("RMSE", np.sqrt(mean_squared_error(Y_train, Y_pred1)))
-    # print("MAE", mean_absolute_error(Y_train, Y_pred1))
-    # print("r2_score", r2_score(Y_train, Y_pred1))
+    Y_pred1 = srgr.predict(X_train)
+    print("RMSE", np.sqrt(mean_squared_error(Y_train, Y_pred1)))
+    print("MAE", mean_absolute_error(Y_train, Y_pred1))
+    print("r2_score", r2_score(Y_train, Y_pred1))
     # 测试集
     Y_pred = srgr.predict(X_test)
     print("RMSE", np.sqrt(mean_squared_error(Y_test, Y_pred)))

@@ -13,13 +13,18 @@ def stacking_MD(X_train, Y_train, X_test, Y_test):
     from xgboost import XGBRegressor
     from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
     from mlxtend.regressor import StackingCVRegressor
-
+    from sklearn.externals import joblib
     xgb = XGBRegressor()
     rfr = RandomForestRegressor()
     gbdt = GradientBoostingRegressor()
     # stacking model
-    srgr = StackingCVRegressor(regressors=[xgb, rfr, gbdt], meta_regressor=xgb, cv=5)
-    srgr.fit(X_train, Y_train)
+    # srgr = StackingCVRegressor(regressors=[xgb, rfr, gbdt], meta_regressor=xgb, cv=5)
+    # srgr.fit(X_train, Y_train)
+
+    # 直接读取保存好的模型 stacking.pkl---type C
+    srgr = joblib.load('stacking.pkl')
+
+
     # 计算马氏距离
     # 1.训练集,求得马氏距离检测异常的阈值
     Y_pred = srgr.predict(X_train)
