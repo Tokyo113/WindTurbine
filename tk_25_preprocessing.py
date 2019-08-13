@@ -48,20 +48,20 @@ from tk_14_single_year import Quartiles, DBSCAN_cluster
 
 # 正常模型验证数据, hfj036
 # 一个月数据为测试数据,2018/07/01~2018/07/30
-df = pd.read_csv('./data/C/hfj036_3/raw_data036.csv')
-#
-df = df.iloc[0:44416]
-df = df.iloc[::5]
-df = df[df["Active_power"] > 1][df["state"] == 6]
-# print(df[df['date'] == '2018-07-01 00:00:00'])
-# print(df[df['date'] == '2018-08-01 00:00:00'])
-df.rename(columns={'Active_power': 'active_power', 'Wind_speed': 'wind_speed'}, inplace=True)
-print(len(df))
-df_1 = DBSCAN_cluster(df, 0.1, 20)
-df_2 = Quartiles(df_1, 1.5, 200)
+# df = pd.read_csv('./data/C/hfj036_3/raw_data036.csv')
+# #
+# df = df.iloc[0:44416]
+# df = df.iloc[::5]
+# df = df[df["Active_power"] > 1][df["state"] == 6]
+# # print(df[df['date'] == '2018-07-01 00:00:00'])
+# # print(df[df['date'] == '2018-08-01 00:00:00'])
+# df.rename(columns={'Active_power': 'active_power', 'Wind_speed': 'wind_speed'}, inplace=True)
+# print(len(df))
+# df_1 = DBSCAN_cluster(df, 0.1, 20)
+# df_2 = Quartiles(df_1, 1.5, 200)
 # # # wt_draw_scatter(df_2, "wind_speed", "active_power")
 # # # 2018年4月测试集
-df_2.to_csv('./data/C/hfj036_3/validation set.csv', index=None)
+# df_2.to_csv('./data/C/hfj036_3/validation set.csv', index=None)
 
 # 故障测试数据
 # hfj038 03/01~04/05
@@ -127,6 +127,52 @@ df_2.to_csv('./data/C/hfj036_3/validation set.csv', index=None)
 # # # # wt_draw_scatter(df_2, "wind_speed", "active_power")
 # # 2018年4月测试集
 # df_2.to_csv('./data/B/hfj149_83/test data.csv', index=None)
+
+# 故障测试数据
+# # hfj151 04/10~05/15
+# df = pd.read_csv('./data/B/hfj151_test/raw_data151.csv')
+# df = df.iloc[97892:185518]
+# df = df.iloc[::5]
+# df = df[df["Active_power"] > 1][df["state"] == 6]
+# # print(df[df['date'] == '2018-03-10 00:00:00'])
+# # print(df[df['date'] == '2018-05-10 00:00:00'])
+# df.rename(columns={'Active_power': 'active_power', 'Wind_speed': 'wind_speed'}, inplace=True)
+# print(len(df))
+# df_1 = DBSCAN_cluster(df, 0.1, 25)
+# df_2 = Quartiles(df_1, 1.5, 200)
+# # wt_draw_scatter(df_2, "wind_speed", "active_power")
+# # 2018年3月测试集
+# df_2.to_csv('./data/B/hfj151_test/test data.csv', index=None)
+
+# # hfj158 07/01~08/10
+# df = pd.read_csv('./data/B/hfj158_test/raw_data158.csv')
+# df = df.iloc[0:57600]
+# df = df.iloc[::5]
+# df = df[df["Active_power"] > 1][df["state"] == 6]
+# # print(df[df['date'] == '2017-07-01 00:00:00'])
+# # print(df[df['date'] == '2017-08-10 00:00:00'])
+# df.rename(columns={'Active_power': 'active_power', 'Wind_speed': 'wind_speed'}, inplace=True)
+# print(len(df))
+# df_1 = DBSCAN_cluster(df, 0.1, 15)
+# df_2 = Quartiles(df_1, 1.5, 200)
+# # wt_draw_scatter(df_2, "wind_speed", "active_power")
+# # 2018年3月测试集
+# df_2.to_csv('./data/B/hfj158_test/test data.csv', index=None)
+
+# hfj162 07/01~08/10
+df = pd.read_csv('./data/B/hfj162_test/raw_data162.csv')
+df = df.iloc[57590:112284]
+df = df.iloc[::5]
+df = df[df["Active_power"] > 1][df["state"] == 6]
+# print(df[df['date'] == '2018-02-10 00:00:00'])
+# print(df[df['date'] == '2018-03-20 00:00:00'])
+df.rename(columns={'Active_power': 'active_power', 'Wind_speed': 'wind_speed'}, inplace=True)
+print(len(df))
+df_1 = DBSCAN_cluster(df, 0.1, 15)
+df_2 = Quartiles(df_1, 1.5, 200)
+# wt_draw_scatter(df_2, "wind_speed", "active_power")
+# 2018年3月测试集
+df_2.to_csv('./data/B/hfj162_test/test data.csv', index=None)
 
 
 # 论文图片:

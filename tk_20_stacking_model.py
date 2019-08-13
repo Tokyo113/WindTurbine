@@ -61,8 +61,11 @@ def stacking_model2(X_train, Y_train, X_test, Y_test):
     # srgr = StackingCVRegressor(regressors=[xgb, rfr, gbdt], meta_regressor=xgb, cv=5)
     #
     # srgr.fit(X_train, Y_train)
-    # 直接读取保存好的模型  stacking.pkl---type C
-    srgr = joblib.load('stacking.pkl')
+    # 直接读取保存好的模型
+    # stacking.pkl---type C
+    # srgr = joblib.load('stacking.pkl')
+    # stacking_B.pkl---type B
+    srgr = joblib.load('stacking_B.pkl')
 
     # 五折交叉验证
     # scoring = ['r2', 'neg_mean_absolute_error', 'neg_mean_squared_error']

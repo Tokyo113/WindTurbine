@@ -116,7 +116,7 @@ def DBSCAN_cluster(data, eps, minPts):
     print(cluster_data.groupby("category").count())
 
     # 防止将上部曲线识别为异常点  两种风机:1500---1550和2000
-    cluster_data["category"][(cluster_data["category"] == -1) & (cluster_data["active_power"] > 1500)] = 0
+    cluster_data["category"][(cluster_data["category"] == -1) & (cluster_data["active_power"] > 2000)] = 0
     outier = cluster_data[(cluster_data["category"] == -1)]
     normal = cluster_data[cluster_data["category"] != -1]
     # 绘图

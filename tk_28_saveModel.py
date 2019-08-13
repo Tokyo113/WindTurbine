@@ -23,7 +23,7 @@ def save_model(X_train, Y_train):
     srgr = StackingCVRegressor(regressors=[xgb, rfr, gbdt], meta_regressor=xgb, cv=5)
 
     srgr.fit(X_train, Y_train)
-    joblib.dump(srgr, 'stacking.pkl')
+    joblib.dump(srgr, 'stacking_B.pkl')
 
 
 
