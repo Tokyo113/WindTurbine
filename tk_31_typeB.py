@@ -17,6 +17,7 @@ from tk_19_feature_selection import feature_selection
 from tk_20_stacking_model import stacking_model, stacking_model2
 from tk_27_preprocessing import wt_preprocessing
 from tk_21_test_model57 import stacking_MD
+from tk_tools import WT_modeling2
 
 df1 = pd.read_csv('./data/B/train/training set.csv')
 df1 = df1.dropna()
@@ -24,7 +25,7 @@ df1 = df1.dropna()
 df1 = feature_selection(df1)
 
 # stacking_model(features, label)
-# WT_modeling(features, label)
+
 df1_t = pd.read_csv('./data/B/hfj149_83/test data.csv')
 df1_t = df1_t.dropna()
 df1_t = feature_selection(df1_t)
@@ -32,6 +33,8 @@ df1_t = feature_selection(df1_t)
 features, label, data_te, label_te = wt_preprocessing(df1, df1_t, False)
 # save_model(features, label)
 
+# 比较B类不同单一模型的效果
+# WT_modeling2(features, label, data_te, label_te)
 # 绘制验证正常模型的图
 y_test1, y_pred1 = stacking_model2(features, label, data_te, label_te)
 md1 = stacking_MD(features, label, data_te, label_te)
