@@ -53,7 +53,7 @@ y_pred1 = pd.Series(y_pred1)
 y_pred1.plot(c='g', label='Predict')
 y_test1 = y_test1.reset_index(drop=True)
 # # flatten 降维
-y_test1.plot(c='y', label='Test')
+y_test1.plot(c='y', label='Measured value')
 x_ticks = ax1.set_xticks([0, 1000, 2000, 3000, 4000, 5000])
 x_labels = ax1.set_xticklabels(["Dec/01", "Dec/06", "Dec/11", "Dec/17", "Dec/22",  "Dec/29"],
                                    rotation=30, fontsize="small")
