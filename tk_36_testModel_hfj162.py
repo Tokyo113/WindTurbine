@@ -55,5 +55,5 @@ md1.plot()
 
 ax3 = f.add_subplot(3, 1, 3)
 s.plot()
-# plt.show()
+plt.show()
 

@@ -17,7 +17,7 @@ from tk_19_feature_selection import feature_selection
 from tk_20_stacking_model import stacking_model, stacking_model2
 from tk_27_preprocessing import wt_preprocessing
 from tk_21_test_model57 import stacking_MD
-
+from tk_tools import wt_Cusum_change_point_detection
 df1 = pd.read_csv('./data/B/train/training set.csv')
 df1 = df1.dropna()
 df1 = feature_selection(df1)
@@ -31,7 +31,7 @@ features, label, data_te, label_te = wt_preprocessing(df1, df1_t, False)
 y_test1, y_pred1 = stacking_model2(features, label, data_te, label_te)
 
 md1 = stacking_MD(features, label, data_te, label_te)
-
+wt_Cusum_change_point_detection(md1, 1000, 0.99)
 # 计算Cusum序列
 arr = np.array(md1)
 s = np.zeros(len(arr) + 1)
