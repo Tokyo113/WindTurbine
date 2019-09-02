@@ -90,6 +90,6 @@ plt.annotate('Change Point 2', xy=(4015, s[4015]), xycoords='data', fontsize=15,
 
 rect = plt.Rectangle((3950, -1600), 220, 1800, color='r', alpha=0.3)
 ax3.add_patch(rect)
-plt.savefig('./data/figure/fault 038.png', dpi=400)
+# plt.savefig('./data/figure/fault 038.png', dpi=400)
 plt.show()
 
