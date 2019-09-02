@@ -25,7 +25,7 @@ def stacking_MD(X_train, Y_train, X_test, Y_test):
     # stacking.pkl---type C
     # srgr = joblib.load('stacking.pkl')
     # stacking_B.pkl---type B
-    srgr = joblib.load('stacking_B.pkl')
+    srgr = joblib.load('stacking.pkl')
 
 
     # 计算马氏距离

@@ -65,7 +65,7 @@ def stacking_model2(X_train, Y_train, X_test, Y_test):
     # stacking.pkl---type C
     # srgr = joblib.load('stacking.pkl')
     # stacking_B.pkl---type B
-    srgr = joblib.load('stacking_B.pkl')
+    srgr = joblib.load('stacking.pkl')
 
     # 五折交叉验证
     # scoring = ['r2', 'neg_mean_absolute_error', 'neg_mean_squared_error']
