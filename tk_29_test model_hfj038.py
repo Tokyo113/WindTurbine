@@ -59,7 +59,7 @@ plt.legend(loc='lower left', ncol=3)
 rect = plt.Rectangle((3950, 15), 220, 70, color='r', alpha=0.3)
 ax1.add_patch(rect)
 plt.annotate('Fault alarm', xy=(4220, 72), xycoords='data', fontsize=15,
-                 xytext=(+80, -170), textcoords='offset points',
+                 xytext=(+70, -150), textcoords='offset points',
                  arrowprops=dict(arrowstyle='->', connectionstyle='arc3,rad=.2'))
 
 ax2 = f.add_subplot(3, 1, 2)
