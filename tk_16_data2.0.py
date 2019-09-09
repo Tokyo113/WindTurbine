@@ -20,10 +20,31 @@ def wt_draw_scatter(data, x, y):
     :param y: 散点图y轴数据
     """
     import matplotlib.pyplot as plt
+    import matplotlib.patches
+    fig = plt.figure()
+    ax = fig.add_subplot(1, 1, 1)
     plt.rcParams['font.sans-serif'] = ['SimHei']  # 用来正常显示中文标签
     plt.rcParams['axes.unicode_minus'] = False  # 用来正常显示负号
-    plt.scatter(data[x], data[y], c='g', s=3, alpha=.5)
-    plt.xlim((0, 18))
+    plt.scatter(data[x], data[y], c='g', s=3, alpha=0.5)
+    # plt.xlim((0, 18))
+    plt.xlabel('Wind Speed/(m/s)')
+    plt.ylabel('Active Power/(kW)')
+    cir1 = matplotlib.patches.Ellipse((13.5, 1120), 8, 150, facecolor='None', edgecolor='red', lw=2, alpha=1)
+    cir2 = matplotlib.patches.Ellipse((16, 1530), 10, 520, facecolor='None', edgecolor='red', lw=2, alpha=1)
+    cir3 = matplotlib.patches.Ellipse((13.5, 0), 10, 150, facecolor='None', edgecolor='red', lw=2, alpha=1)
+    ax.add_patch(cir1)
+    ax.add_patch(cir2)
+    ax.add_patch(cir3)
+    plt.annotate('Type 1', xy=(12, 75), xycoords='data', fontsize=10,
+                 xytext=(+60, +10), textcoords='offset points',
+                 arrowprops=dict(arrowstyle='->', connectionstyle='arc3,rad=.2'))
+    plt.annotate('Type 2', xy=(13, 1030), xycoords='data', fontsize=10,
+                 xytext=(+70, -50), textcoords='offset points',
+                 arrowprops=dict(arrowstyle='->', connectionstyle='arc3,rad=.2'))
+    plt.annotate('Type 3', xy=(15, 1800), xycoords='data', fontsize=10,
+                 xytext=(+60, +10), textcoords='offset points',
+                 arrowprops=dict(arrowstyle='->', connectionstyle='arc3,rad=.2'))
+    plt.savefig('./data/figure/raw data.png', dpi=400)
     plt.show()
 
 
@@ -49,11 +70,15 @@ def main():
     # X_tt, Y_tt = wt_preprocessing(data_2017, gs=True, rs=True, dt=True, ndt=True, ws=True, ap=True)
 
     # wt_params(X_tt, Y_tt)
-    data_2018 = './data/data2018_threeMonth.csv'
-
-    X_tt, Y_tt = wt_preprocessing(data_2018, gs=True, rs=True, dt=True, ndt=True, ws=True, ap=True)
-
-    wt_params(X_tt, Y_tt)
+    # data_2018 = './data/data2018_threeMonth.csv'
+    #
+    # X_tt, Y_tt = wt_preprocessing(data_2018, gs=True, rs=True, dt=True, ndt=True, ws=True, ap=True)
+    #
+    # wt_params(X_tt, Y_tt)
+    df = pd.read_csv('./data/B/train/hfj156_90/raw_data156.csv')
+    # df = pd.read_csv('./data/B//hfj149_83/test data.csv')
+    df = df[0:200000]
+    wt_draw_scatter(df, "Wind_speed", "Active_power")
 
 
 
