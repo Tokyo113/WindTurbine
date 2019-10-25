@@ -91,11 +91,17 @@ plt.annotate('Change Point 1', xy=(1178, s[1178]), xycoords='data', fontsize=15,
 plt.annotate('Change Point 2', xy=(3704, s[3704]), xycoords='data', fontsize=15,
                  xytext=(+10, -180), textcoords='offset points',
                  arrowprops=dict(arrowstyle='->', connectionstyle='arc3,rad=.2'))
+plt.annotate('Change Point 3', xy=(1906, s[1906]), xycoords='data', fontsize=15,
+                 xytext=(+10, -20), textcoords='offset points',
+                 arrowprops=dict(arrowstyle='->', connectionstyle='arc3,rad=.2'))
+plt.annotate('Change Point 4', xy=(2840, s[2840]), xycoords='data', fontsize=15,
+                 xytext=(-15, -100), textcoords='offset points',
+                 arrowprops=dict(arrowstyle='->', connectionstyle='arc3,rad=.2'))
 rect = plt.Rectangle((3600, -650), 150, 3700, color='r', alpha=0.3)
 ax3.add_patch(rect)
 
 
 
-plt.savefig('./data/figure/fault 173.png', dpi=400)
+plt.savefig('./data/figure/fault 173_1.png', dpi=400)
 plt.show()
 

@@ -34,7 +34,7 @@ features, label, data_te, label_te = wt_preprocessing(df1, df1_t, False)
 y_test1, y_pred1 = stacking_model2(features, label, data_te, label_te)
 
 md1 = stacking_MD(features, label, data_te, label_te)
-# wt_Cusum_change_point_detection(md1, 1000, 0.99)
+# wt_Cusum_change_point_detection(md1, 1000, 0.90)
 # 计算Cusum序列
 arr = np.array(md1)
 s = np.zeros(len(arr) + 1)
@@ -86,10 +86,14 @@ plt.annotate('Change Point 1', xy=(2148, s[2148]), xycoords='data', fontsize=15,
 plt.annotate('Change Point 2', xy=(4015, s[4015]), xycoords='data', fontsize=15,
                  xytext=(+10, +40), textcoords='offset points',
                  arrowprops=dict(arrowstyle='->', connectionstyle='arc3,rad=.2'))
+plt.annotate('Change Point 3', xy=(3170, s[3170]), xycoords='data', fontsize=15,
+                 xytext=(-10, +50), textcoords='offset points',
+                 arrowprops=dict(arrowstyle='->', connectionstyle='arc3,rad=.2'))
+
 
 
 rect = plt.Rectangle((3950, -1600), 220, 1800, color='r', alpha=0.3)
 ax3.add_patch(rect)
-# plt.savefig('./data/figure/fault 038.png', dpi=400)
+plt.savefig('./data/figure/fault 038_1.png', dpi=400)
 plt.show()
 
